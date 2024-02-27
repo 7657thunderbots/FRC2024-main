@@ -156,9 +156,12 @@ public class RobotContainer {
             () -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
             () -> Constants.driverController.getRawAxis(2));
+    Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+            () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
 
     m_drivebase.setDefaultCommand(
-            !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngle);
+            !RobotBase.isSimulation() ? driveinfinityturn : driveinfinityturn);
 
   }
 
