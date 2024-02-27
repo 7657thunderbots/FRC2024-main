@@ -314,7 +314,7 @@ public Command sysIdAngleMotorCommand() {
   {
     swerveDrive.drive(translation,
                       rotation,
-                      fieldRelative,
+                      true,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
