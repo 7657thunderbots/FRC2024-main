@@ -3,15 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
+import frc.robot.subsystems.shooter.shooterSubsystem;
+import frc.robot.subsystems.Uptake.UptakeSubsystem;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-//import frc.robot.subsystems.Climber.ClimberSubsystem;
-//import frc.robot.subsystems.Elevator.ElevatorSubsystem;
-//import frc.robot.subsystems.Feeder.FeederSubsystem;
-//import frc.robot.subsystems.Intake.IntakeSubsystem;
 //import frc.robot.subsystems.LED.LEDSubsystem;
 //import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -39,7 +37,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ClimberSubsystem m_climber = new ClimberSubsystem();
   // private final FeederSubsystem m_feeder = new FeederSubsystem();
-  // private final IntakeSubsystem m_intake = new IntakeSubsystem();
+   private final IntakeSubsystem m_intake = new IntakeSubsystem();
+   private final UptakeSubsystem m_uptake = new UptakeSubsystem();
+   private final shooterSubsystem m_shooter = new shooterSubsystem();
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   // private final LEDSubsystem m_LED = new LEDSubsystem();
@@ -85,14 +85,19 @@ public class RobotContainer {
     // new Trigger(() -> Math.abs(Constants.operatorController.getRawAxis(1)) > 0.1)
     //         .whileTrue(m_elevator.runManual(Constants.operatorController::getLeftY));
     // Constants.operatorController.a().whileTrue(m_feeder.runFeeder(0.5));
-    // Constants.operatorController.b().whileTrue(m_feeder.runFeeder(-0.5));
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_intake.startIntaking());
+     Constants.operatorController.b().and(Constants.driverController.rightTrigger(.1)).whileFalse(m_intake.startIntaking());
     // Constants.operatorController.rightTrigger(0.1).whileTrue(m_shooter.shootIt(-5500));
     // Constants.operatorController.leftTrigger(0.1).whileTrue(m_intake.manualIntake());
-    // Constants.operatorController.leftBumper().whileTrue(m_intake.stopIntaking());
     // Constants.operatorController.rightBumper().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0.5),m_feeder.runFeeder(-0.7)));
     // m_elevator.setDefaultCommand(m_elevator.stopManual());
-    // Constants.operatorController.x().whileTrue(m_elevator.lowerElevator());
-    // Constants.operatorController.y().whileTrue(m_elevator.raiseElevator());
+     Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
+     Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
+     Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
+     Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
+     Constants.operatorController.y().and(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
+
+     
     //             //Constants.operatorController.x().whileTrue(exampleSubsystem.runManual(()->0));
     // //Constants.operatorController.x().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0),m_feeder.runFeeder(0), m_climber.setRightSpeed(0), m_climber.setLeftSpeed(0), m_intake.stopIntaking(), m_elevator.stopManual()));
 
@@ -100,15 +105,16 @@ public class RobotContainer {
     // Constants.driverController.rightTrigger(0.1).whileTrue(m_climber.setRightSpeed(0.3));
     // Constants.driverController.leftBumper().whileTrue(m_climber.setLeftSpeed(-0.3));
     // Constants.driverController.leftTrigger(0.1).whileTrue(m_climber.setLeftSpeed(0.3));
-    // //Constants.driverController.b().whileTrue(superstructure.toState(SuperState.CLIMB_REACH));
+    
+    
 
     // TODO: Change this to follow the run/runOnce paradigm used by the Superstructure
-    Constants.driverController.a().onTrue(new InstantCommand(m_drivebase::zeroGyro));
-    Constants.driverController.x().onTrue(new InstantCommand(m_drivebase::addFakeVisionReading));
-    Constants.driverController.b().onTrue(new InstantCommand(m_drivebase::lock));
-    Constants.driverController.y().whileTrue(Commands.deferredProxy(() -> m_drivebase.driveToPose(
-            new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-    ));
+    //Constants.driverController.a().onTrue(new InstantCommand(m_drivebase::zeroGyro));
+    //Constants.driverController.x().onTrue(new InstantCommand(m_drivebase::addFakeVisionReading));
+    //Constants.driverController.b().onTrue(new InstantCommand(m_drivebase::lock));
+    //Constants.driverController.y().whileTrue(Commands.deferredProxy(() -> m_drivebase.driveToPose(
+          //  new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+    //));
   }
 
   public void configurePathPlanner() {
