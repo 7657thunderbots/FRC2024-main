@@ -6,6 +6,8 @@ package frc.robot;
 import frc.robot.subsystems.shooter.shooterSubsystem;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
+import frc.robot.subsystems.Piviot.piviotSubsystem;
+import frc.robot.subsystems.proximity.proximitysubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -40,6 +42,8 @@ public class RobotContainer {
    private final IntakeSubsystem m_intake = new IntakeSubsystem();
    private final UptakeSubsystem m_uptake = new UptakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
+   private final piviotSubsystem m_piviot = new piviotSubsystem();
+   private final proximitysubsystem m_proximity = new proximitysubsystem();
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   // private final LEDSubsystem m_LED = new LEDSubsystem();
@@ -85,17 +89,17 @@ public class RobotContainer {
     // new Trigger(() -> Math.abs(Constants.operatorController.getRawAxis(1)) > 0.1)
     //         .whileTrue(m_elevator.runManual(Constants.operatorController::getLeftY));
     // Constants.operatorController.a().whileTrue(m_feeder.runFeeder(0.5));
-     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_intake.startIntaking());
-     Constants.operatorController.b().and(Constants.driverController.rightTrigger(.1)).whileFalse(m_intake.startIntaking());
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
     // Constants.operatorController.rightTrigger(0.1).whileTrue(m_shooter.shootIt(-5500));
-    // Constants.operatorController.leftTrigger(0.1).whileTrue(m_intake.manualIntake());
+     //Constants.operatorController.leftTrigger(0.1).whileTrue(m_intake.manualIntake());
     // Constants.operatorController.rightBumper().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0.5),m_feeder.runFeeder(-0.7)));
     // m_elevator.setDefaultCommand(m_elevator.stopManual());
      Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
      Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
      Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
-     Constants.operatorController.y().and(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
+     Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
 
      
     //             //Constants.operatorController.x().whileTrue(exampleSubsystem.runManual(()->0));

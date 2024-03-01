@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class shooterSubsystem extends SubsystemBase {
     private final TalonFX leftLeader = new TalonFX(20);
-  private final TalonFX leftFollower = new TalonFX(22);
+  private final TalonFX leftFollower = new TalonFX(22);//top
   public boolean amping;
    public boolean speakering;
 
@@ -17,12 +17,12 @@ public class shooterSubsystem extends SubsystemBase {
    
   }
   public void shoot(){
-        leftLeader.set(-.7);
-        leftFollower.set(.7);
+        leftLeader.set(.5);
+        leftFollower.set(-.5);
     }
     public void amp(){
-        leftLeader.set(-.5);
-        leftFollower.set(-.5);
+        leftLeader.set(.5);
+        leftFollower.set(.5);
     }
 
     public void stop() {

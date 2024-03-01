@@ -11,14 +11,14 @@ public class UptakeSubsystem extends SubsystemBase {
     private final CANSparkMax uptake;
 
     public UptakeSubsystem(){
-        uptake = new CANSparkMax(16 , CANSparkLowLevel.MotorType.kBrushless);
+        uptake = new CANSparkMax(17 , CANSparkLowLevel.MotorType.kBrushless);
         uptake.restoreFactoryDefaults();
         uptake.setIdleMode(CANSparkMax.IdleMode.kCoast);
         uptake.setInverted(false);
 
     }
     public void uptake(){
-        uptake.set(-.75);
+        uptake.set(-.5);
     }
 
     public void stop() {
