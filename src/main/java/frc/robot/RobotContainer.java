@@ -13,10 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-//import frc.robot.subsystems.LED.LEDSubsystem;
-//import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
-//import frc.robot.subsystems.superstructure.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,11 +43,18 @@ public class RobotContainer {
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
 
+
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
   public final VisionSubsystem m_vision = new VisionSubsystem();
 
   private final SendableChooser<Command> autoChooser;
 
+   private final proximitysubsystem m_proximity = new proximitysubsystem();
+  
+  private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+
+  private final SendableChooser<Command> autoChooser;
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configurePathPlanner();
@@ -69,15 +73,26 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
+
      Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
      Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
      Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
 
-     Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision));
+
   }
 
+
+// Nothing under here uses our subsystem right now!
+
+
+
+
+  
   public void configurePathPlanner() {
     m_drivebase.setupPathPlanner();
   }
