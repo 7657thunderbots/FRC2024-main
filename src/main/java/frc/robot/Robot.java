@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.subsystems.LED.LEDSubsystem;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -58,7 +61,7 @@ public class Robot extends TimedRobot {
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
+   * that you want ran during disabled autonomous, teleoperated and test.
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
@@ -121,7 +124,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robotContainer.setRumbleDetection();
+  }
 
   @Override
   public void testInit() {
@@ -134,13 +139,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    // try
-    // {
-    //   new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve"));
-    // } catch (IOException e)
-    // {
-    //   throw new RuntimeException(e);
-    // }
   }
 
   /** This function is called periodically during test mode. */
@@ -153,5 +151,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+      // Update drivetrain simulation
+      m_robotContainer.driveSimulationPeriodic();
+
+      // Update camera simulation
+      m_robotContainer.updateVisionSimulationPeriod();
+  }
 }
