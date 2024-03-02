@@ -5,6 +5,7 @@
 package frc.robot;
 import frc.robot.subsystems.shooter.shooterSubsystem;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
@@ -20,10 +21,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Vision;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 /**
@@ -38,6 +42,13 @@ public class RobotContainer {
    private final UptakeSubsystem m_uptake = new UptakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
+
+
+  public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+  public final VisionSubsystem m_vision = new VisionSubsystem();
+
+  private final SendableChooser<Command> autoChooser;
+
    private final proximitysubsystem m_proximity = new proximitysubsystem();
   
   private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
@@ -65,11 +76,14 @@ public class RobotContainer {
 
      Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
      Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
+
      Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
      Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
      Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
+
+
   }
 
 
@@ -80,12 +94,6 @@ public class RobotContainer {
 
   
   public void configurePathPlanner() {
-    // TODO: These are example NamedCommands, import the real NamedCommands from the `swerve` branch
-    // NamedCommands.registerCommand("Ground Intake",
-            // superstructure.toState(SuperState.GROUND_INTAKE).withTimeout(3));
-    // NamedCommands.registerCommand("Safe", superstructure.toState(SuperState.SAFE).withTimeout(3));
-    // NamedCommands.registerCommand("TestShoot1", m_shooter.shootIt(-5000));
-    // NamedCommands.registerCommand("RunFeeder", m_feeder.runFeeder(0.3));
     m_drivebase.setupPathPlanner();
   }
 
@@ -95,16 +103,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // A Path will be run in autonomous
-    //(null)
-//    return drivebase.spinCounterClockwise();//drivebase.getAutonomousCommand("TESTER", true);
-
-    // Runs an Auto
-//    return new PathPlannerAuto("Simple Auto");
-
-//    Gets Selected Auto from Shuffleboard
     return autoChooser.getSelected();
-//    return null;
   }
 
   public void setDriveMode()
@@ -114,22 +113,15 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = m_drivebase.driveCommand(
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> -Constants.driverController.getRightX(),
-            () -> -Constants.driverController.getRightY());
-
-    Command driveFieldOrientedDirectAngleSim = m_drivebase.simDriveCommand(
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> Constants.driverController.getRawAxis(2));
     Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
             () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
 
+    Command driveinfinityturn_sim = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+            () -> MathUtil.applyDeadband(-Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+            () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
     m_drivebase.setDefaultCommand(
-            !RobotBase.isSimulation() ? driveinfinityturn : driveinfinityturn);
+            RobotBase.isSimulation() ? driveinfinityturn_sim : driveinfinityturn);
 
   }
 
@@ -137,4 +129,29 @@ public class RobotContainer {
   {
     m_drivebase.setMotorBrake(brake);
   }
+
+  public void setRumbleDetection()
+  {
+    if (m_vision.getLatestResult().hasTargets()) {
+      Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0); 
+      Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0); 
+      System.out.println(m_vision.getLatestResult().targets);
+    } else {
+      // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0); 
+      // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0); 
+    }
+  }
+
+  public void updateVisionSimulationPeriod() {
+    m_vision.simulationPeriodic(m_drivebase.getPose());
+
+    var debugField = m_vision.getSimDebugField();
+    debugField.getObject("EstimatedRobot").setPose(m_drivebase.getPose());
+    // debugField.getObject("EstimatedRobotModules").setPoses(m_drivebase.getModulePoses());
+  }
+
+  public void driveSimulationPeriodic() {
+    m_drivebase.simulationPeriodic();
+  }
+
 }
