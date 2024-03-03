@@ -12,7 +12,7 @@ public class proximitysubsystem extends SubsystemBase{
 
   private Rev2mDistanceSensor distOnboard; 
   public Trigger piecein;
-  private Boolean pieceInBoolean=false;
+  public Boolean pieceInBoolean=false;
 
 
  public proximitysubsystem(){
@@ -24,7 +24,7 @@ public class proximitysubsystem extends SubsystemBase{
     //distMXP = new Rev2mDistanceSensor(Port.kMXP);
     distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
     distOnboard.setAutomaticMode(true);
-    piecein = new Trigger(() -> (this.pieceInBoolean==true));
+    piecein = new Trigger(() -> (this.pieceInBoolean));
   }
 
  
@@ -50,7 +50,7 @@ public class proximitysubsystem extends SubsystemBase{
       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
     }
-    if (distOnboard.getRange() < 5){
+    if (distOnboard.getRange() < 3){
       pieceInBoolean = true;
     }
     else {

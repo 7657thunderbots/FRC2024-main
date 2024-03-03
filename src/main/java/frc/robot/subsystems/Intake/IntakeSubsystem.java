@@ -9,11 +9,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import frc.robot.subsystems.Uptake.UptakeSubsystem;
+import frc.robot.subsystems.proximity.proximitysubsystem;
+import edu.wpi.first.wpilibj.Timer;
 
 public class IntakeSubsystem extends SubsystemBase {
 
     
     private final CANSparkMax centerMotor;
+    private final UptakeSubsystem m_uptake = new UptakeSubsystem();
+    private final proximitysubsystem m_proximity = new proximitysubsystem();
+    public final Timer wait = new Timer();
+    boolean stop;
+    boolean init;
+    double starttime;
+    double timedone;
+    boolean started;
+
 
 
 
@@ -23,10 +35,16 @@ public class IntakeSubsystem extends SubsystemBase {
         centerMotor.restoreFactoryDefaults();
         centerMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         centerMotor.setInverted(false);
+        wait.reset();
+        init =true;
+        stop=false;
+        started= false;
+        wait.reset();
+        wait.start();
     }
 
     public void intake(){
-        centerMotor.set(-1);
+        centerMotor.set(-.75);
     }
 
     public void stop() {
@@ -36,12 +54,35 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command stopIntaking(){
         return runOnce(() -> {
            this.stop();
+           this.m_uptake.stop();
         });
     }
 
     public Command startIntaking(){
-        return runOnce(() -> {
-           this.intake();
+       
+        return run(() -> {
+          if (stop == true){
+            if(wait.getFPGATimestamp()>(starttime+1)){
+                stop =false;
+            }
+          }
+           if (m_proximity.pieceInBoolean==false && stop ==false ){
+            this.intake();
+           this.m_uptake.uptake(); 
+           started=false;
+;
+           }
+           else
+           {
+            this.init =false;
+            this.stop();
+            this.m_uptake.stop();
+            if (started==false){
+               started = true;
+               starttime=wait.getFPGATimestamp();
+               stop = true;
+            }
+           }
         });
     }
     
