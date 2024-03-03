@@ -46,6 +46,9 @@ public final class Constants {
   public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.Meters.of(3), Units.Meters.of(5.77), Rotation2d.fromDegrees(130.0));
   public static final Pose2d RED_SPEAKER = new Pose2d(Units.Meters.of(14), Units.Meters.of(5.77), Rotation2d.fromDegrees(330.0));
 
+  public static final int BLUE_SPEAKER_TAG_INDEX = 3;
+  public static final int RED_SPEAKER_TAG_INDEX = 8;
+
   // CONTROL CONSTANT CLASSES
 
   public static class Vision {
