@@ -153,12 +153,12 @@ public class SwerveSubsystem extends SubsystemBase
    * @param camera {@link PhotonCamera} to communicate with.
    * @return A {@link Command} which will run the alignment.
    */
-  public Command aimAtTarget(VisionSubsystem vision) {
+  public Command aimAtTarget(VisionSubsystem vision, double xInput, double yInput) {
     return run(() -> {
       PhotonPipelineResult result = vision.getLatestResult();
       if (result.hasTargets()) {
-        drive(getTargetSpeeds(0,
-                0,
+        drive(getTargetSpeeds(xInput * swerveDrive.get,
+                yInput,
                 Rotation2d.fromDegrees(-result.getBestTarget().getYaw()))); // Not sure if this will work, more math may be required.
       }
     });
@@ -177,13 +177,6 @@ public class SwerveSubsystem extends SubsystemBase
     return new PathPlannerAuto(pathName);
   }
 
-  // public Command spinCounterClockwise()
-  // {
-  //   return run(()->{
-  //         setChassisSpeeds(
-  //           new ChassisSpeeds(0,0,1)
-  //           );});
-  // }
 
   /**
    * Use PathPlanner Path finding to go to a point on the field.
@@ -463,8 +456,6 @@ public Command sysIdAngleMotorCommand() {
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle)
   {
-    xInput = xInput;
-    yInput = yInput;
     return swerveDrive.swerveController.getTargetSpeeds(xInput,
                                                         yInput,
                                                         angle.getRadians(),

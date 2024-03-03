@@ -55,6 +55,12 @@
           "string[]##v_/CameraPublisher/photonvision-processed/streams": {
             "open": true
           }
+        },
+        "photonvision-raw": {
+          "open": true,
+          "string[]##v_/CameraPublisher/photonvision-raw/streams": {
+            "open": true
+          }
         }
       },
       "PathPlanner": {

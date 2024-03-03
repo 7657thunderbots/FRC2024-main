@@ -45,15 +45,11 @@ public class RobotContainer {
 
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
-  public final VisionSubsystem m_vision = new VisionSubsystem();
+  public final VisionSubsystem m_vision = VisionSubsystem.getInstance();
 
   private final SendableChooser<Command> autoChooser;
 
-   private final proximitysubsystem m_proximity = new proximitysubsystem();
-  
-  private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
-
-  private final SendableChooser<Command> autoChooser;
+  //  private final proximitysubsystem m_proximity = new proximitysubsystem();
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -74,8 +70,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
-     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
 
      Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
      Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
@@ -83,6 +79,9 @@ public class RobotContainer {
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
 
+     Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,Constants.driverController.getLeftX(), Constants.driverController.getLeftY()));
+     Constants.driverController.a().whileTrue(m_drivebase.driveToPose(Constants.BLUE_SPEAKER));
+     Constants.driverController.x().whileTrue(m_drivebase.driveToPose(Constants.RED_SPEAKER));
 
   }
 

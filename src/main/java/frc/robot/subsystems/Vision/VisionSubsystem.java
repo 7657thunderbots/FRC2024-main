@@ -32,8 +32,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
+import swervelib.SwerveDrive;
+
+import java.io.File;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -49,11 +54,21 @@ public class VisionSubsystem {
     private final PhotonPoseEstimator photonEstimator;
     private double lastEstTimestamp = 0;
 
+    private static VisionSubsystem INSTANCE = null;
+
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
 
-    public VisionSubsystem() {
+    public static VisionSubsystem getInstance() {
+        if (INSTANCE == null)
+        {
+        INSTANCE = new VisionSubsystem();
+        }
+        return INSTANCE;
+    }
+
+    private VisionSubsystem() {
         camera = new PhotonCamera(kCameraName);
 
         photonEstimator =

@@ -10,13 +10,15 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.units.Units;
 import swervelib.math.Matter;
 import swervelib.parser.PIDFConfig;
 
@@ -38,8 +40,11 @@ public final class Constants {
           new CommandXboxController(DriveteamConstants.kOperatorControllerPort);
   
   public static final double ROBOT_MASS = (100) * 0.453592; // 32lbs * kg per pound***Need to change
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+  // public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
+
+  public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.Meters.of(3), Units.Meters.of(5.77), Rotation2d.fromDegrees(130.0));
+  public static final Pose2d RED_SPEAKER = new Pose2d(Units.Meters.of(14), Units.Meters.of(5.77), Rotation2d.fromDegrees(330.0));
 
   // CONTROL CONSTANT CLASSES
 
