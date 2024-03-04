@@ -5,6 +5,7 @@
 package frc.robot;
 import frc.robot.subsystems.shooter.shooterSubsystem;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
@@ -12,10 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-//import frc.robot.subsystems.LED.LEDSubsystem;
-//import frc.robot.subsystems.Shooter.ShooterSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
-//import frc.robot.subsystems.superstructure.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,10 +21,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.Vision;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 /**
@@ -37,27 +38,27 @@ import com.pathplanner.lib.auto.NamedCommands;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final ClimberSubsystem m_climber = new ClimberSubsystem();
-  // private final FeederSubsystem m_feeder = new FeederSubsystem();
    private final IntakeSubsystem m_intake = new IntakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
 
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
-  // private final LEDSubsystem m_LED = new LEDSubsystem();
+  // private final LEDSubsystem m_LED = new LEDSubsystem
 
-  private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+
+
+  public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+  public final VisionSubsystem m_vision = new VisionSubsystem();
 
   private final SendableChooser<Command> autoChooser;
-  // public final Superstructure superstructure = new Superstructure(m_climber,
-  //                                                                 m_feeder,
-  //                                                                 m_intake,
-  //                                                                 m_shooter,
-  //                                                                 m_elevator,
-  //                                                                 m_LED,
-  //                                                                 m_drivebase);
 
+   private final proximitysubsystem m_proximity = new proximitysubsystem();
+  
+  // private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+
+  // private final SendableChooser<Command> autoChooser;
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configurePathPlanner();
@@ -100,37 +101,25 @@ public class RobotContainer {
     // m_elevator.setDefaultCommand(m_elevator.stopManual());
     //  Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
     //  Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
+
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
+
      Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
 
-     
-    //             //Constants.operatorController.x().whileTrue(exampleSubsystem.runManual(()->0));
-    // //Constants.operatorController.x().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0),m_feeder.runFeeder(0), m_climber.setRightSpeed(0), m_climber.setLeftSpeed(0), m_intake.stopIntaking(), m_elevator.stopManual()));
 
-    // Constants.driverController.rightBumper().whileTrue(m_climber.setRightSpeed(-0.3));
-    // Constants.driverController.rightTrigger(0.1).whileTrue(m_climber.setRightSpeed(0.3));
-    // Constants.driverController.leftBumper().whileTrue(m_climber.setLeftSpeed(-0.3));
-    // Constants.driverController.leftTrigger(0.1).whileTrue(m_climber.setLeftSpeed(0.3));
-    
-    
-
-    // TODO: Change this to follow the run/runOnce paradigm used by the Superstructure
-    //Constants.driverController.a().onTrue(new InstantCommand(m_drivebase::zeroGyro));
-    //Constants.driverController.x().onTrue(new InstantCommand(m_drivebase::addFakeVisionReading));
-    //Constants.driverController.b().onTrue(new InstantCommand(m_drivebase::lock));
-    //Constants.driverController.y().whileTrue(Commands.deferredProxy(() -> m_drivebase.driveToPose(
-          //  new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-    //));
   }
 
+
+// Nothing under here uses our subsystem right now!
+
+
+
+
+  
   public void configurePathPlanner() {
-    // TODO: These are example NamedCommands, import the real NamedCommands from the `swerve` branch
-    // NamedCommands.registerCommand("Ground Intake",
-            // superstructure.toState(SuperState.GROUND_INTAKE).withTimeout(3));
-    // NamedCommands.registerCommand("Safe", superstructure.toState(SuperState.SAFE).withTimeout(3));
-    // NamedCommands.registerCommand("TestShoot1", m_shooter.shootIt(-5000));
-    // NamedCommands.registerCommand("RunFeeder", m_feeder.runFeeder(0.3));
     m_drivebase.setupPathPlanner();
   }
 
@@ -140,16 +129,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // A Path will be run in autonomous
-    //(null)
-//    return drivebase.spinCounterClockwise();//drivebase.getAutonomousCommand("TESTER", true);
-
-    // Runs an Auto
-//    return new PathPlannerAuto("Simple Auto");
-
-//    Gets Selected Auto from Shuffleboard
     return autoChooser.getSelected();
-//    return null;
   }
 
   public void setDriveMode()
@@ -159,22 +139,15 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = m_drivebase.driveCommand(
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> -Constants.driverController.getRightX(),
-            () -> -Constants.driverController.getRightY());
-
-    Command driveFieldOrientedDirectAngleSim = m_drivebase.simDriveCommand(
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () -> Constants.driverController.getRawAxis(2));
     Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
             () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
 
+    Command driveinfinityturn_sim = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+            () -> MathUtil.applyDeadband(-Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+            () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
     m_drivebase.setDefaultCommand(
-            !RobotBase.isSimulation() ? driveinfinityturn : driveinfinityturn);
+            RobotBase.isSimulation() ? driveinfinityturn_sim : driveinfinityturn);
 
   }
 
@@ -182,4 +155,29 @@ public class RobotContainer {
   {
     m_drivebase.setMotorBrake(brake);
   }
+
+  public void setRumbleDetection()
+  {
+    if (m_vision.getLatestResult().hasTargets()) {
+      Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0); 
+      Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0); 
+      System.out.println(m_vision.getLatestResult().targets);
+    } else {
+      // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0); 
+      // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0); 
+    }
+  }
+
+  public void updateVisionSimulationPeriod() {
+    m_vision.simulationPeriodic(m_drivebase.getPose());
+
+    var debugField = m_vision.getSimDebugField();
+    debugField.getObject("EstimatedRobot").setPose(m_drivebase.getPose());
+    // debugField.getObject("EstimatedRobotModules").setPoses(m_drivebase.getModulePoses());
+  }
+
+  public void driveSimulationPeriodic() {
+    m_drivebase.simulationPeriodic();
+  }
+
 }
