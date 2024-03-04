@@ -44,10 +44,14 @@ import com.pathplanner.lib.auto.NamedCommands;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
    private final IntakeSubsystem m_intake = new IntakeSubsystem();
-   private final UptakeSubsystem m_uptake = new UptakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
    private final proximitysubsystem m_proximity = new proximitysubsystem();
+
+  // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
+  // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  // private final LEDSubsystem m_LED = new LEDSubsystem
+
 
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
@@ -57,6 +61,9 @@ public class RobotContainer {
 
   private Pose2d curentSpeakerPose;
   private int currentSpeakerTagIndex;
+
+  private final proximitysubsystem m_proximity = new proximitysubsystem();
+  
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,12 +91,34 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+//    Constants.operatorController.y().whileTrue(superstructure.toState(SuperState.SCORE_AMP_SETUP));
+//    Constants.operatorController.x().whileTrue(superstructure.toState(SuperState.SCORE_STAGE_PROTECTED_SETUP));
+//    Constants.operatorController.b().whileTrue(superstructure.toState(SuperState.SCORE_SPEAKER_SETUP));
+//    Constants.operatorController.a().whileTrue(superstructure.toState(SuperState.SAFE));
+  
+//    Constants.operatorController.rightBumper().whileTrue(superstructure.toState(superstructure.getShootState()));
+//    Constants.operatorController.leftBumper().whileTrue(superstructure.toState(SuperState.GROUND_INTAKE));
+//    Constants.operatorController.leftTrigger(0.1).whileTrue(superstructure.toState(SuperState.SOURCE_INTAKE));
+    // Manual controls
+    // new Trigger(() -> Math.abs(Constants.operatorController.getRawAxis(1)) > 0.1)
+    //         .whileTrue(m_elevator.runManual(Constants.operatorController::getLeftY));
+    // Constants.operatorController.a().whileTrue(m_feeder.runFeeder(0.5));
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_intake.startIntaking());
+     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_intake.stopIntaking());
+    // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_uptake.stopUptaking());
+    // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_uptake.startUptaking());
+    
+    //m_uptake.startUptaking()
+     // Constants.operatorController.rightTrigger(0.1).whileTrue(m_shooter.shootIt(-5500));
+     //Constants.operatorController.leftTrigger(0.1).whileTrue(m_intake.manualIntake());
+    // Constants.operatorController.rightBumper().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0.5),m_feeder.runFeeder(-0.7)));
+    // m_elevator.setDefaultCommand(m_elevator.stopManual());
+    //  Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
+    //  Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
 
-     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
-     Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileTrue(m_intake.startIntaking().andThen(m_uptake.startUptaking())));
+    //  Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
 
-     Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
-     Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
      Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
