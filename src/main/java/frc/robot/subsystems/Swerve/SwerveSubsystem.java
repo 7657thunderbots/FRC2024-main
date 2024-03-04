@@ -320,6 +320,20 @@ public Command sysIdAngleMotorCommand() {
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
+  public void updateEstimatedPose(VisionSubsystem vision) {
+    // Correct pose estimate with vision measurements
+    var visionEst = vision.getEstimatedGlobalPose();
+    visionEst.ifPresent(
+            est -> {
+                var estPose = est.estimatedPose.toPose2d();
+                // Change our trust in the measurement based on the tags we can see
+                var estStdDevs = vision.getEstimationStdDevs(estPose);
+
+                swerveDrive.addVisionMeasurement(
+                        est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            });
+}
+
   /**
    * Drive the robot given a chassis field oriented velocity.
    *
