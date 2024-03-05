@@ -17,17 +17,17 @@ public class shooterSubsystem extends SubsystemBase {
    
   }
   public void shoot(){
-        leftLeader.set(.5);
-        leftFollower.set(-.5);
+        leftLeader.setVoltage(6);
+        leftFollower.setVoltage(-6);
     }
     public void amp(){
-        leftLeader.set(.5);
-        leftFollower.set(.5);
+        leftLeader.setVoltage(6);
+        leftFollower.setVoltage(6);
     }
 
     public void stop() {
-        leftFollower.set(0);
-        leftLeader.set(0);
+        leftFollower.setVoltage(0);
+        leftLeader.setVoltage(0);
     }
 
     public Command stopShooterCommand(){
