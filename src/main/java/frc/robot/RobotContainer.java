@@ -8,6 +8,7 @@ import frc.robot.subsystems.Uptake.UptakeSubsystem;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
+import frc.robot.subsystems.Swerve.shooting_moving;
 // import frc.robot.subsystems.proximity.proximitysubsystem;
 
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class RobotContainer {
    private final UptakeSubsystem m_uptake = new UptakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
+   private final shooting_moving m_Shooting_moving = new shooting_moving();
   // private final proximitysubsystem m_proximity = new proximitysubsystem();
 
 
