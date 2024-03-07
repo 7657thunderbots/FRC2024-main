@@ -25,6 +25,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
@@ -331,6 +332,10 @@ public Command sysIdAngleMotorCommand() {
 
                 swerveDrive.addVisionMeasurement(
                         est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+
+                double[] estimatedPose =  { est.estimatedPose.toPose2d().getX(), est.estimatedPose.toPose2d().getY() };
+                // Send the estimated position of the bot 
+                SmartDashboard.putNumberArray("Estimated Real Robot", estimatedPose);
             });
 }
 
