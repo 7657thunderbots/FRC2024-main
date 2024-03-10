@@ -29,6 +29,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.Vision;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,7 +50,7 @@ public class RobotContainer {
 
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
-  public final VisionSubsystem m_vision = new VisionSubsystem();
+  // public final VisionSubsystem m_vision = new VisionSubsystem();
 
   private final SendableChooser<Command> autoChooser;
 
@@ -88,16 +89,20 @@ public class RobotContainer {
     // Manual controls
     // new Trigger(() -> Math.abs(Constants.operatorController.getRawAxis(1)) > 0.1)
     //         .whileTrue(m_elevator.runManual(Constants.operatorController::getLeftY));
-    // Constants.operatorController.a().whileTrue(m_feeder.runFeeder(0.5));
+    Constants.operatorController.x().whileTrue(m_intake.uptakeshoot());
+    Constants.operatorController.x().whileFalse(m_intake.disableUptake());
      Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_intake.startIntaking());
      Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_intake.stopIntaking());
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_uptake.stopUptaking());
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_uptake.startUptaking());
     
     //m_uptake.startUptaking()
-     // Constants.operatorController.rightTrigger(0.1).whileTrue(m_shooter.shootIt(-5500));
-     //Constants.operatorController.leftTrigger(0.1).whileTrue(m_intake.manualIntake());
-    // Constants.operatorController.rightBumper().whileTrue(new ParallelCommandGroup(m_shooter.manualShoot(0.5),m_feeder.runFeeder(-0.7)));
+    // Constants.operatorController.rightTrigger(0.1).onTrue(m_piviot.piviotAmp());
+     Constants.operatorController.pov(0).onTrue(m_piviot.piviotAmp());
+     Constants.operatorController.rightBumper().onTrue(m_piviot.piviotspeakerclose());
+     Constants.operatorController.leftBumper().onTrue(m_piviot.understage());
+     
+
     // m_elevator.setDefaultCommand(m_elevator.stopManual());
     //  Constants.operatorController.x().whileTrue(m_uptake.startUptaking());
     //  Constants.operatorController.x().whileFalse(m_uptake.stopUptaking());
@@ -121,6 +126,14 @@ public class RobotContainer {
   
   public void configurePathPlanner() {
     m_drivebase.setupPathPlanner();
+    NamedCommands.registerCommand("Intake",m_intake.startIntaking());
+    NamedCommands.registerCommand("Spin_up", m_shooter.startSpeakerCommand());
+    NamedCommands.registerCommand("shoot", m_intake.uptakeshoot());
+    NamedCommands.registerCommand("stop_Spin_up",m_shooter.stopShooterCommand());
+    NamedCommands.registerCommand("stop_uptake",m_intake.stopIntaking());
+    
+    
+
   }
 
   /**
@@ -129,7 +142,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new PathPlannerAuto("2 piece");//autoChooser.getSelected();
   }
 
   public void setDriveMode()
@@ -156,25 +169,25 @@ public class RobotContainer {
     m_drivebase.setMotorBrake(brake);
   }
 
-  public void setRumbleDetection()
-  {
-    if (m_vision.getLatestResult().hasTargets()) {
-      Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0); 
-      Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0); 
-      System.out.println(m_vision.getLatestResult().targets);
-    } else {
-      // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0); 
-      // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0); 
-    }
-  }
+  // public void setRumbleDetection()
+  // {
+  //   if (m_vision.getLatestResult().hasTargets()) {
+  //     Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0); 
+  //     Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0); 
+  //     System.out.println(m_vision.getLatestResult().targets);
+  //   } else {
+  //     // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0); 
+  //     // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0); 
+  //   }
+  // }
 
-  public void updateVisionSimulationPeriod() {
-    m_vision.simulationPeriodic(m_drivebase.getPose());
+  // public void updateVisionSimulationPeriod() {
+  //   m_vision.simulationPeriodic(m_drivebase.getPose());
 
-    var debugField = m_vision.getSimDebugField();
-    debugField.getObject("EstimatedRobot").setPose(m_drivebase.getPose());
-    // debugField.getObject("EstimatedRobotModules").setPoses(m_drivebase.getModulePoses());
-  }
+  //   var debugField = m_vision.getSimDebugField();
+  //   debugField.getObject("EstimatedRobot").setPose(m_drivebase.getPose());
+  //   // debugField.getObject("EstimatedRobotModules").setPoses(m_drivebase.getModulePoses());
+  // }
 
   public void driveSimulationPeriodic() {
     m_drivebase.simulationPeriodic();

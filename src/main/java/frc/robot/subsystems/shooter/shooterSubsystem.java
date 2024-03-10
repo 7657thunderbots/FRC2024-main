@@ -17,8 +17,8 @@ public class shooterSubsystem extends SubsystemBase {
    
   }
   public void shoot(){
-        leftLeader.set(.5);
-        leftFollower.set(-.5);
+    leftLeader.setVoltage(6);
+    leftFollower.setVoltage(-6);
     }
     public void amp(){
         leftLeader.set(.5);

@@ -50,14 +50,19 @@ public class proximitysubsystem extends SubsystemBase{
       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
     }
+        boolean isValid = distOnboard.isRangeValid();
+
     if (distOnboard.getRange() < 3){
       pieceInBoolean = true;
     }
+    else if(isValid==false){
+      pieceInBoolean = false;
+  }
     else {
       pieceInBoolean = false;
     }
 
-    
+    distOnboard.setAutomaticMode(true);
   
 
  

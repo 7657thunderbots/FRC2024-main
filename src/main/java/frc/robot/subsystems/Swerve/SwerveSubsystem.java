@@ -174,7 +174,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto(pathName);
+    return new PathPlannerAuto("2 piece");
   }
 
   // public Command spinCounterClockwise()

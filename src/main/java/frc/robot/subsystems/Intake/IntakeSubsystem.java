@@ -25,6 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
     double starttime;
     double timedone;
     boolean started;
+    boolean uptakeshoot;
 
 
 
@@ -57,19 +58,33 @@ public class IntakeSubsystem extends SubsystemBase {
            this.m_uptake.stop();
         });
     }
-
+    public Command uptakeshoot(){
+        return runOnce(()->{
+            m_uptake.uptake();
+            uptakeshoot=true;
+        });
+    }
+    public Command disableUptake() {
+        return runOnce(() -> {
+            uptakeshoot=false;
+          this.m_uptake.stop();
+        });
+    }
     public Command startIntaking(){
        
         return run(() -> {
-          if (stop == true){
-            if(wait.getFPGATimestamp()>(starttime+1)){
-                stop =false;
+          if (uptakeshoot==true){
+
+          }
+            else if (stop == true){
+            if(wait.getFPGATimestamp()>(starttime+2)){
+              this.stop =false;
             }
           }
            if (m_proximity.pieceInBoolean==false && stop ==false ){
             this.intake();
            this.m_uptake.uptake(); 
-           started=false;
+           this.started=false;
 ;
            }
            else

@@ -26,16 +26,15 @@ public class piviotSubsystem extends SubsystemBase {
     private boolean manualmove;
     private boolean setpoints;
     int timer;
-    public double hkP = 0.05;
-    private final double hkI = 0.05;
-   private final double hkD = 0.001;
+    public double hkP = 0.01;
+    private final double hkI = 0.;
+   private final double hkD = 0.00;
     private final double hiLimit = 0;
     private double EerrorSum = 0;
    private double ElastError=0;
     public CANSparkMax hand;
     public RelativeEncoder hande;
     private double lastTimestamp = 0;
-    public double hsetpoint =0;
     public final Timer wait = new Timer();
     public piviotSubsystem(){
         piviot = new CANSparkMax(16 , CANSparkLowLevel.MotorType.kBrushless);
@@ -48,36 +47,36 @@ public class piviotSubsystem extends SubsystemBase {
 
     }
 
-    public void stop() {
-        piviot.set(0);
-    }
+    // public void stop() {
+    //     piviot.set(0);
+    // }
 
-    public Command stopPiviot(){
-        return runOnce(() -> {
-           this.stop();
-        });
-    }
+    // public Command stopPiviot(){
+    //     return runOnce(() -> {
+    //        this.stop();
+    //     });
+    // }
 
     public Command piviotAmp(){
         return runOnce(() -> {
-           this.piviotsetpoint = 0;
+           this.piviotsetpoint = .7;
         });
     }
      
     public Command piviotspeakerclose(){
         return runOnce(() -> {
-           this.piviotsetpoint = 450;
+           this.piviotsetpoint = 40.5;
         });
     }   
-     public Command piviotspeakerfar(){
-        return runOnce(() -> {
-           this.piviotsetpoint = 600;
-        });
-    }
+    //  public Command piviotspeakerfar(){
+    //     return runOnce(() -> {
+    //        this.piviotsetpoint = 600;
+    //     });
+    // }
 
      public Command understage(){
         return runOnce(() -> {
-           this.piviotsetpoint = 900;
+           this.piviotsetpoint = 101.0;
         });
     }
 
@@ -90,7 +89,8 @@ public class piviotSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
-        if(setpoints==true){
+        piviotencoder = piviot.getAbsoluteEncoder();
+        //if(setpoints==true){
         double Eerror = piviotsetpoint-piviotencoder.getPosition();
     double dt = Timer.getFPGATimestamp() - lastTimestamp;
 
@@ -101,14 +101,22 @@ public class piviotSubsystem extends SubsystemBase {
     double EerrorRate = (Eerror - ElastError) / dt;
 
     double houtput = hkP * Eerror + hkI * EerrorSum + hkD * EerrorRate;
-  
-    piviot.set(houtput);
+    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<5){
+        houtput=0;
+    }
+    if (piviotencoder.getPosition()<7 && houtput<0){
+         houtput=0;
+     }
+    else if(piviotencoder.getPosition()>1000 && houtput>0){
+        houtput=0;
+     }
+    piviot.set(-houtput);
 
     // update last- variables
      lastTimestamp = Timer.getFPGATimestamp();
-    ElastError = Eerror; }
+    ElastError = Eerror;// }
     
-       piviot.set(Constants.operatorController.getLeftY());
+       //piviot.set(Constants.operatorController.getLeftY());
        SmartDashboard.putNumber("Hand",piviotencoder.getPosition());
 
 

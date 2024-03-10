@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    m_robotContainer.setRumbleDetection();
+    // m_robotContainer.setRumbleDetection();
   }
 
   @Override
@@ -156,6 +156,6 @@ public class Robot extends TimedRobot {
       m_robotContainer.driveSimulationPeriodic();
 
       // Update camera simulation
-      m_robotContainer.updateVisionSimulationPeriod();
+      // m_robotContainer.updateVisionSimulationPeriod();
   }
 }
