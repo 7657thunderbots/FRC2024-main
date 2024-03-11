@@ -9,6 +9,9 @@ import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
+
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -22,7 +25,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
@@ -42,6 +47,7 @@ public class RobotContainer {
    private final IntakeSubsystem m_intake = new IntakeSubsystem();
    private final shooterSubsystem m_shooter = new shooterSubsystem();
    private final piviotSubsystem m_piviot = new piviotSubsystem();
+   private final proximitysubsystem m_proximity = new proximitysubsystem();
 
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
@@ -54,16 +60,21 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-   private final proximitysubsystem m_proximity = new proximitysubsystem();
-  
-  // private final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+  private Pose2d curentSpeakerPose;
+  private int currentSpeakerTagIndex;
 
-  // private final SendableChooser<Command> autoChooser;
-  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configurePathPlanner();
     autoChooser = AutoBuilder.buildAutoChooser("Simple Auto");
+  Optional<Alliance> ally = DriverStation.getAlliance();
+  if (ally.isPresent() && ally.get() != Alliance.Blue) {
+      curentSpeakerPose = Constants.BLUE_SPEAKER;      
+      currentSpeakerTagIndex = 4;
+    } else {
+      curentSpeakerPose = Constants.RED_SPEAKER;      
+      currentSpeakerTagIndex = 3;
+    }
     Shuffleboard.getTab("Pre-Match").add("Auto Chooser", autoChooser);
     configureBindings(); // Configure the trigger bindings
   }
@@ -114,14 +125,10 @@ public class RobotContainer {
      Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
      Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
 
+    //  Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision, Constants.driverController.getLeftX(), Constants.driverController.getLeftY(), currentSpeakerTagIndex));
+    //  Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
 
   }
-
-
-// Nothing under here uses our subsystem right now!
-
-
-
 
   
   public void configurePathPlanner() {

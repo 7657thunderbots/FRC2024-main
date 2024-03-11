@@ -11,6 +11,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,18 +20,22 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants.Vision;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
@@ -49,6 +55,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private final SwerveDrive swerveDrive;
   private static SwerveSubsystem INSTANCE = null;
+
   /**
    * Maximum speed of the robot in meters per second, used to limit acceleration.
    */
@@ -63,6 +70,7 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   private SlewRateLimiter filter = new SlewRateLimiter(0.5);
+
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -152,17 +160,18 @@ public class SwerveSubsystem extends SubsystemBase
    * @param camera {@link PhotonCamera} to communicate with.
    * @return A {@link Command} which will run the alignment.
    */
-  public Command aimAtTarget(VisionSubsystem vision) {
+  public Command aimAtTarget(VisionSubsystem vision, double xInput, double yInput, int tagIndex) {
     return run(() -> {
       PhotonPipelineResult result = vision.getLatestResult();
       if (result.hasTargets()) {
-        drive(getTargetSpeeds(0,
-                0,
-                Rotation2d.fromDegrees(-result.getBestTarget().getYaw()))); // Not sure if this will work, more math may be required.
+        Rotation2d yawToTag3d = PhotonUtils.getYawToPose(getPose(), Vision.kTagLayout.getTags().get(tagIndex).pose.toPose2d());
+        drive(getTargetSpeeds(xInput * swerveDrive.getMaximumVelocity(),
+                yInput,
+                yawToTag3d));
       }
     });
   }
-
+ 
   /**
    * Get the path follower with events.
    *
@@ -176,13 +185,6 @@ public class SwerveSubsystem extends SubsystemBase
     return new PathPlannerAuto("2 piece");
   }
 
-  // public Command spinCounterClockwise()
-  // {
-  //   return run(()->{
-  //         setChassisSpeeds(
-  //           new ChassisSpeeds(0,0,1)
-  //           );});
-  // }
 
   /**
    * Use PathPlanner Path finding to go to a point on the field.
@@ -317,6 +319,24 @@ public Command sysIdAngleMotorCommand() {
                       true,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
+
+  public void updateEstimatedPose(VisionSubsystem vision) {
+    // Correct pose estimate with vision measurements
+    var visionEst = vision.getEstimatedGlobalPose();
+    visionEst.ifPresent(
+            est -> {
+                var estPose = est.estimatedPose.toPose2d();
+                // Change our trust in the measurement based on the tags we can see
+                var estStdDevs = vision.getEstimationStdDevs(estPose);
+
+                swerveDrive.addVisionMeasurement(
+                        est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+
+                double[] estimatedPose =  { est.estimatedPose.toPose2d().getX(), est.estimatedPose.toPose2d().getY() };
+                // Send the estimated position of the bot 
+                SmartDashboard.putNumberArray("Estimated Real Robot", estimatedPose);
+            });
+}
 
   /**
    * Drive the robot given a chassis field oriented velocity.
@@ -462,8 +482,6 @@ public Command sysIdAngleMotorCommand() {
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle)
   {
-    xInput = xInput;
-    yInput = yInput;
     return swerveDrive.swerveController.getTargetSpeeds(xInput,
                                                         yInput,
                                                         angle.getRadians(),
