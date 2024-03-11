@@ -152,9 +152,9 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-            () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () ->MathUtil.applyDeadband( Constants.driverController.getRightX(),.3));
+    Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(.5*Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+            () -> MathUtil.applyDeadband(.5*Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+            () ->MathUtil.applyDeadband(- .5*Constants.driverController.getRightX(),.3));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
             () -> MathUtil.applyDeadband(-Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),

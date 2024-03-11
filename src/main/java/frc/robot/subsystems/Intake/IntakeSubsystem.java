@@ -72,32 +72,32 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     public Command startIntaking(){
        
-        return run(() -> {
-          if (uptakeshoot==true){
+        return runOnce(() -> {
+        //   if (uptakeshoot==true){
 
-          }
-            else if (stop == true){
-            if(wait.getFPGATimestamp()>(starttime+2)){
-              this.stop =false;
-            }
-          }
-           if (m_proximity.pieceInBoolean==false && stop ==false ){
+        //   }
+        //     else if (stop == true){
+        //     if(wait.getFPGATimestamp()>(starttime+2)){
+        //       this.stop =false;
+        //     }
+        //   }
+        //    if (m_proximity.pieceInBoolean==false && stop ==false ){
             this.intake();
            this.m_uptake.uptake(); 
            this.started=false;
 ;
-           }
-           else
-           {
-            this.init =false;
-            this.stop();
-            this.m_uptake.stop();
-            if (started==false){
-               started = true;
-               starttime=wait.getFPGATimestamp();
-               stop = true;
-            }
-           }
+        //    }
+        //    else
+        //    {
+            // this.init =false;
+            // this.stop();
+            // this.m_uptake.stop();
+        //     if (started==false){
+        //        started = true;
+        //        starttime=wait.getFPGATimestamp();
+        //        stop = true;
+        //     // }
+        //    }
         });
     }
     
