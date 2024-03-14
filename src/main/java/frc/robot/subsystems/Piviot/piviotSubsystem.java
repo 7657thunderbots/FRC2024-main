@@ -26,7 +26,7 @@ public class piviotSubsystem extends SubsystemBase {
     private boolean manualmove;
     private boolean setpoints;
     int timer;
-    public double hkP = 0.01;
+    public double hkP = 0.1;
     private final double hkI = 0.;
    private final double hkD = 0.00;
     private final double hiLimit = 0;
@@ -101,7 +101,7 @@ public class piviotSubsystem extends SubsystemBase {
     double EerrorRate = (Eerror - ElastError) / dt;
 
     double houtput = hkP * Eerror + hkI * EerrorSum + hkD * EerrorRate;
-    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<5){
+    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<2){
         houtput=0;
     }
     if (piviotencoder.getPosition()<7 && houtput<0){

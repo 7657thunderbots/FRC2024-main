@@ -1,0 +1,109 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3561992470519597,
+      "y": 5.5580843834955
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin_up"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopshoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_uptake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopshoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_Spin_up"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Vision.VisionSubsystem;
+// import frc.robot.subsystems.Vision.VisionSubsystem;
 //import frc.robot.subsystems.LED.LEDSubsystem;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.m_drivebase.updateEstimatedPose(m_robotContainer.m_vision);
+    //m_robotContainer.m_drivebase.updateEstimatedPose(m_robotContainer.m_vision);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -99,6 +99,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_shooter.sauto=true;
+    m_robotContainer.m_intake.auto=true;
     m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -110,10 +112,15 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {
+     m_robotContainer.m_shooter.sauto=false;
+     m_robotContainer.m_intake.auto=false;   
+    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -123,6 +130,9 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.setDriveMode();
     m_robotContainer.setMotorBrake(true);
+    m_robotContainer.m_intake.uptakeshoot=false;
+    m_robotContainer.m_intake.intake=false;
+    m_robotContainer.m_shooter.spinup=false;
   }
 
   /** This function is called periodically during operator control. */

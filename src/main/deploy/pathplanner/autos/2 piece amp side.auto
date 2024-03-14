@@ -1,0 +1,91 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7164826210840541,
+      "y": 6.70957431023773
+    },
+    "rotation": -119.0546040990772
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin_up"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopshoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New New Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New New New Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopshoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_Spin_up"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

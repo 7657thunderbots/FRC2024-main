@@ -18,7 +18,7 @@ public class UptakeSubsystem extends SubsystemBase {
 
     }
     public void uptake(){
-        uptake.set(-.5);
+        uptake.set(-.4);
     }
 
     public void stop() {

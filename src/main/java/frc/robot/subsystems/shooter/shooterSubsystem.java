@@ -10,10 +10,13 @@ public class shooterSubsystem extends SubsystemBase {
   private final TalonFX leftFollower = new TalonFX(22);//top
   public boolean amping;
    public boolean speakering;
+   public boolean spinup;
+   public boolean sauto;
 
   public shooterSubsystem(){
     amping=false;
     speakering=false;
+    spinup=false;
    
   }
   public void shoot(){
@@ -28,6 +31,18 @@ public class shooterSubsystem extends SubsystemBase {
     public void stop() {
         leftFollower.set(0);
         leftLeader.set(0);
+    }
+
+    public Command astartSpeakerCommand(){
+        return runOnce(()->{
+        spinup=true;
+        });
+    }
+
+    public Command astopShooterCommand(){
+        return runOnce(()->{
+            spinup=false;
+        });
     }
 
     public Command stopShooterCommand(){
@@ -62,6 +77,12 @@ public class shooterSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
+        if (spinup==true&&sauto==true){
+            this.shoot();
+        }
+        else if (spinup==false&&sauto==true){
+            this.stop();
+        }
         //System.out.println("This the position of the intake: " + getIntakePistonPosition());
         //System.out.println("This is the power of the intake: " + getSpeed());
 

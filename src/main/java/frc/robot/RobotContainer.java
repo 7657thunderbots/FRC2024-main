@@ -5,7 +5,7 @@
 package frc.robot;
 import frc.robot.subsystems.shooter.shooterSubsystem;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
-import frc.robot.subsystems.Vision.VisionSubsystem;
+// import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
@@ -44,10 +44,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-   private final IntakeSubsystem m_intake = new IntakeSubsystem();
-   private final shooterSubsystem m_shooter = new shooterSubsystem();
-   private final piviotSubsystem m_piviot = new piviotSubsystem();
-   private final proximitysubsystem m_proximity = new proximitysubsystem();
+   public final IntakeSubsystem m_intake = new IntakeSubsystem();
+   public final shooterSubsystem m_shooter = new shooterSubsystem();
+   public final piviotSubsystem m_piviot = new piviotSubsystem();
+  //  private final proximitysubsystem m_proximity = new proximitysubsystem();
 
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
   // private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
@@ -60,21 +60,22 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
 
-  private Pose2d curentSpeakerPose;
-  private int currentSpeakerTagIndex;
+  // private Pose2d curentSpeakerPose;
+  // private int currentSpeakerTagIndex;
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configurePathPlanner();
     autoChooser = AutoBuilder.buildAutoChooser("Simple Auto");
-  Optional<Alliance> ally = DriverStation.getAlliance();
-  if (ally.isPresent() && ally.get() != Alliance.Blue) {
-      curentSpeakerPose = Constants.BLUE_SPEAKER;      
-      currentSpeakerTagIndex = 4;
-    } else {
-      curentSpeakerPose = Constants.RED_SPEAKER;      
-      currentSpeakerTagIndex = 3;
-    }
+  // Optional<Alliance> ally = DriverStation.getAlliance();
+  // if (ally.isPresent() && ally.get() != Alliance.Blue) {
+  //     curentSpeakerPose = Constants.BLUE_SPEAKER;      
+  //     currentSpeakerTagIndex = 4;
+  //   } else {
+  //     curentSpeakerPose = Constants.RED_SPEAKER;      
+  //     currentSpeakerTagIndex = 3;
+  //   }
     Shuffleboard.getTab("Pre-Match").add("Auto Chooser", autoChooser);
     configureBindings(); // Configure the trigger bindings
   }
@@ -133,11 +134,12 @@ public class RobotContainer {
   
   public void configurePathPlanner() {
     m_drivebase.setupPathPlanner();
-    NamedCommands.registerCommand("Intake",m_intake.startIntaking());
-    NamedCommands.registerCommand("Spin_up", m_shooter.startSpeakerCommand());
-    NamedCommands.registerCommand("shoot", m_intake.uptakeshoot());
-    NamedCommands.registerCommand("stop_Spin_up",m_shooter.stopShooterCommand());
-    NamedCommands.registerCommand("stop_uptake",m_intake.stopIntaking());
+    NamedCommands.registerCommand("Intake",m_intake.astartIntaking());
+    NamedCommands.registerCommand("Spin_up", m_shooter.astartSpeakerCommand());
+    NamedCommands.registerCommand("shoot", m_intake.auptakeshoot());
+    NamedCommands.registerCommand("stop_Spin_up",m_shooter.astopShooterCommand());
+    NamedCommands.registerCommand("stop_uptake",m_intake.astopIntaking());
+    NamedCommands.registerCommand("stopshoot", m_intake.auptakestopshoot());
     
     
 
@@ -149,7 +151,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("2 piece");//autoChooser.getSelected();
+    return new PathPlannerAuto("2 piece center");//autoChooser.getSelected();
   }
 
   public void setDriveMode()
@@ -161,7 +163,7 @@ public class RobotContainer {
     // right stick controls the desired angle NOT angular rotation
     Command driveinfinityturn = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(.5*Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
             () -> MathUtil.applyDeadband(.5*Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-            () ->MathUtil.applyDeadband(- .5*Constants.driverController.getRightX(),.3));
+            () ->MathUtil.applyDeadband(- .6*Constants.driverController.getRightX(),.3));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
             () -> MathUtil.applyDeadband(-Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
