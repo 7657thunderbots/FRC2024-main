@@ -20,67 +20,31 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_Spin_up"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopshoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "get piece 1 (ampside)"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "piece1 return (ampside)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
             "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "stopshoot"
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopshoot"
           }
         }
       ]

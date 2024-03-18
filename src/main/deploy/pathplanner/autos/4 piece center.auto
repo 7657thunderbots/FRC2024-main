@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7164826210840541,
-      "y": 6.70957431023773
+      "x": 1.3561992470519597,
+      "y": 5.5580843834955
     },
-    "rotation": -119.0546040990772
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -32,7 +32,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.75
           }
         },
         {
@@ -48,15 +48,33 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "get piece 1 (ampside)"
+            "name": "Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "piece1 return (ampside)"
+            "pathName": "get piece 2 (center)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "return piece 2 (center)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_uptake"
           }
         },
         {
@@ -68,7 +86,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.75
           }
         },
         {
@@ -81,6 +99,36 @@
           "type": "named",
           "data": {
             "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "grab far piece 1 (Center)"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_uptake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Grab piece 1 "
           }
         }
       ]

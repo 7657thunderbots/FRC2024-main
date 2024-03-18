@@ -27,7 +27,7 @@ public class IntakeSubsystem extends SubsystemBase {
     boolean started;
     boolean time;
     public boolean auto;
-    public boolean uptakeshoot;
+    public boolean uptakeshoot=false;
    public boolean intake;
 
 
@@ -91,7 +91,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command auptakeshoot(){
         return runOnce(()->{
             uptakeshoot=true;
-            this.m_uptake.uptake();
+            //this.m_uptake.uptake();
         });
     }
     public Command auptakestopshoot(){
@@ -156,20 +156,20 @@ public class IntakeSubsystem extends SubsystemBase {
     {
         if (auto==true){
        
-             if (uptakeshoot==true){
-                  this.uptakeshoot();
-          }
-            else if (stop == true){
-            if(wait.getFPGATimestamp()>(starttime+2)){
-              this.stop =false;
+            if (uptakeshoot==true){
+                this.m_uptake.uptake();
             }
-          }
-           if (m_proximity.pieceInBoolean==false && stop ==false ){
-            this.intake();
-           this.m_uptake.uptake(); 
-           this.started=false;
+            else if (stop == true){
+                if(wait.getFPGATimestamp()>(starttime+2)){
+                    this.stop =false;
+                }
+            }
+            else if (m_proximity.pieceInBoolean==false && stop ==false ){  //* */
+                this.intake();
+                this.m_uptake.uptake(); 
+                this.started=false;
 ;
-           }
+            }
            else
            {
             this.init =false;
@@ -186,7 +186,7 @@ public class IntakeSubsystem extends SubsystemBase {
             this.m_uptake.stop();
            }
            else if (uptakeshoot==true){
-            this.m_uptake.startUptaking();
+            this.m_uptake.uptake();
            }
            
 

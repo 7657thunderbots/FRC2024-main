@@ -71,6 +71,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   private SlewRateLimiter filter = new SlewRateLimiter(0.5);
 
+  
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -87,7 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
     //  In this case the wheel diameter is 4 inches, which must be converted to meters to get meters/second.
     //  The gear ratio is 6.75 motor revolutions per wheel rotation.
     //  The encoder resolution per motor revolution is 1 per motor revolution.
-    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.12);
+    double driveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(4), 6.75);
     System.out.println("\"conversionFactor\": {");
     System.out.println("\t\"angle\": " + angleConversionFactor + ",");
     System.out.println("\t\"drive\": " + driveConversionFactor);
@@ -182,7 +183,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto("2 piece");
+    return new PathPlannerAuto("pathName");
   }
 
 
@@ -440,7 +441,7 @@ public Command sysIdAngleMotorCommand() {
 
   /**
    * Gets the current yaw angle of the robot, as reported by the swerve pose estimator in the underlying drivebase.
-   * Note, this is not the raw gyro reading, this may be corrected from calls to resetOdometry().
+   * Note, this is not the  gyro reading, this may be corrected from calls to resetOdometry().
    *
    * @return The yaw angle
    */
@@ -448,6 +449,7 @@ public Command sysIdAngleMotorCommand() {
   {
     return getPose().getRotation();
   }
+  
 
   /**
    * Get the chassis speeds based on controller input of 2 joysticks. One for speeds in which direction. The other for

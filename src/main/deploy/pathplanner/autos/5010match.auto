@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7164826210840541,
-      "y": 6.70957431023773
+      "x": 0.7471890191305137,
+      "y": 4.4219476557765
     },
-    "rotation": -119.0546040990772
+    "rotation": 119.11614626607894
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.56
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
@@ -48,15 +54,33 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "get piece 1 (ampside)"
+            "name": "Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "piece1 return (ampside)"
+            "pathName": "5010 match"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5010 match return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_uptake"
           }
         },
         {

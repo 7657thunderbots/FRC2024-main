@@ -26,7 +26,7 @@ public class piviotSubsystem extends SubsystemBase {
     private boolean manualmove;
     private boolean setpoints;
     int timer;
-    public double hkP = 0.1;
+    public double hkP = 0.05;
     private final double hkI = 0.;
    private final double hkD = 0.00;
     private final double hiLimit = 0;
@@ -59,7 +59,7 @@ public class piviotSubsystem extends SubsystemBase {
 
     public Command piviotAmp(){
         return runOnce(() -> {
-           this.piviotsetpoint = .7;
+           this.piviotsetpoint = 4;
         });
     }
      
@@ -76,7 +76,7 @@ public class piviotSubsystem extends SubsystemBase {
 
      public Command understage(){
         return runOnce(() -> {
-           this.piviotsetpoint = 101.0;
+           this.piviotsetpoint = 94.0;
         });
     }
 

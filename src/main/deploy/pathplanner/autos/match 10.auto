@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.7164826210840541,
-      "y": 6.70957431023773
+      "y": 4.370770325699067
     },
-    "rotation": -119.0546040990772
+    "rotation": 119.29136217098423
   },
   "command": {
     "type": "sequential",
@@ -20,43 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "shoot"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_Spin_up"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopshoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "get piece 1 (ampside)"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "piece1 return (ampside)"
           }
         },
         {
@@ -78,9 +48,27 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "stop_Spin_up"
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New Path"
           }
         }
       ]

@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.wpilibj.XboxController;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,15 +28,17 @@ import swervelib.parser.SwerveParser;
  * project.
  */
 public class Robot extends TimedRobot {
+  private XboxController operatorController;
 
   private static Robot   instance;
   private Command m_autonomousCommand;
-
+  private XboxController driverController;
   private RobotContainer m_robotContainer;
 
  // private LEDSubsystem m_ledSubsystem;
 
   private Timer disabledTimer;
+  
 
   public Robot()
   {
@@ -52,6 +56,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+  operatorController = new XboxController(1);
+  driverController = new XboxController(0);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -76,6 +82,13 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     //m_robotContainer.m_drivebase.updateEstimatedPose(m_robotContainer.m_vision);
+    SmartDashboard.putNumber("A",m_robotContainer.a);
+    if (driverController.getBackButton()){
+      m_robotContainer.a=1;
+    }
+    else if (driverController.getStartButton()){
+      m_robotContainer.a=-1;
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -139,7 +152,28 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     // m_robotContainer.setRumbleDetection();
+    if (operatorController.getBackButton()){
+      m_robotContainer.m_climber.climber1.setVoltage(8);
+    }
+    else if (operatorController.getLeftBumper()==true){
+       m_robotContainer.m_climber.climber1.setVoltage(-8);
+    }
+    else{
+       m_robotContainer.m_climber.climber1.setVoltage(0);
+    }
+
+    if (operatorController.getStartButton()){
+      m_robotContainer.m_climber.climber2.setVoltage(-8);
+    }
+    else if (operatorController.getRightBumper()==true){
+       m_robotContainer.m_climber.climber2.setVoltage(8);
+    }
+    else{
+       m_robotContainer.m_climber.climber2.setVoltage(0);
+    }
+
   }
+
 
   @Override
   public void testInit() {

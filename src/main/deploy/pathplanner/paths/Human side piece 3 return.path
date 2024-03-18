@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.748222625158122,
-        "y": 6.985931892655865
+        "x": 2.6612211640264865,
+        "y": 4.1046482092964185
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.7482226251581214,
-        "y": 6.985931892655865
+        "x": 2.804517688239886,
+        "y": 3.8743502239450334
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7369535531150271,
-        "y": 6.719809776253215
+        "x": 0.731835820103872,
+        "y": 4.411712189758074
       },
       "prevControl": {
-        "x": -0.2630464468849729,
-        "y": 6.719809776253215
+        "x": -0.26816417989612795,
+        "y": 4.411712189758074
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {
@@ -43,12 +43,6 @@
               "data": {
                 "name": "Spin_up"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "stop_uptake"
-              }
             }
           ]
         }
@@ -56,14 +50,14 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 400.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.73548770192006,
+    "rotation": 118.83550084774308,
     "rotateFast": false
   },
   "reversed": false,

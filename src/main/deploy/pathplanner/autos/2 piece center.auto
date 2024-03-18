@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3561992470519597,
-      "y": 5.5580843834955
+      "x": 1.3715524460751891,
+      "y": 5.552966650487756
     },
     "rotation": 180.0
   },
@@ -20,7 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
@@ -56,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "get piece 2 (center)"
           }
         },
         {
@@ -68,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "return piece 2 (center)"
           }
         },
         {

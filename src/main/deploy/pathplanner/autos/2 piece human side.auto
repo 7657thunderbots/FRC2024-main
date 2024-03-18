@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7164826210840541,
-      "y": 6.70957431023773
+      "x": 0.7318358201072839,
+      "y": 4.401476723745527
     },
-    "rotation": -119.0546040990772
+    "rotation": 120.80144597613695
   },
   "command": {
     "type": "sequential",
@@ -50,13 +50,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "get piece 1 (ampside)"
+            "pathName": "human side piece 3 get"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "piece1 return (ampside)"
+            "pathName": "Human side piece 3 return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop_uptake"
           }
         },
         {
@@ -69,18 +75,6 @@
           "type": "wait",
           "data": {
             "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopshoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_Spin_up"
           }
         }
       ]
