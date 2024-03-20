@@ -127,8 +127,10 @@ public class RobotContainer {
     // m_uptake.startUptaking()
     // Constants.operatorController.rightTrigger(0.1).onTrue(m_piviot.piviotAmp());
     Constants.operatorController.povUp().onTrue(m_piviot.piviotAmp());
+    Constants.operatorController.povUp().onFalse(m_piviot.pivotClosed());
     Constants.operatorController.povRight().onTrue(m_piviot.piviotspeakerclose());
-    Constants.operatorController.povDown().onTrue(m_piviot.understage());
+    Constants.operatorController.povRight().onFalse(m_piviot.pivotClosed());
+    Constants.operatorController.povDown().onTrue(m_piviot.pivotClosed());
     // Constants.operatorController.rightBumper().onTrue(m_climber.up1Command());
     // Constants.operatorController.rightTrigger().onTrue(m_climber.down1Command());
     // Constants.operatorController.rightBumper().or
