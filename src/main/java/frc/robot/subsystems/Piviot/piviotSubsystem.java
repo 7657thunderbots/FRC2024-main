@@ -74,7 +74,7 @@ public class piviotSubsystem extends SubsystemBase {
     //     });
     // }
 
-     public Command understage(){
+     public Command pivotClosed(){ // NOTE: used for understage
         return runOnce(() -> {
            this.piviotsetpoint = 94.0;
         });
