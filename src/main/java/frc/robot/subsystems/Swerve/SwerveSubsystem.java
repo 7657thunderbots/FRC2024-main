@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.Vision;
-// import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import org.photonvision.PhotonCamera;
@@ -71,6 +71,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   private SlewRateLimiter filter = new SlewRateLimiter(0.5);
 
+  // SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeedMPS);
   
 
   /**
@@ -161,17 +162,17 @@ public class SwerveSubsystem extends SubsystemBase
    * @param camera {@link PhotonCamera} to communicate with.
    * @return A {@link Command} which will run the alignment.
    */
-  // public Command aimAtTarget(VisionSubsystem vision, double xInput, double yInput, int tagIndex) {
-  //   return run(() -> {
-  //     PhotonPipelineResult result = vision.getLatestResult();
-  //     if (result.hasTargets()) {
-  //       Rotation2d yawToTag3d = PhotonUtils.getYawToPose(getPose(), Vision.kTagLayout.getTags().get(tagIndex).pose.toPose2d());
-  //       drive(getTargetSpeeds(xInput * swerveDrive.getMaximumVelocity(),
-  //               yInput,
-  //               yawToTag3d));
-  //     }
-  //   });
-  // }
+  public Command aimAtTarget(VisionSubsystem vision, double xInput, double yInput, int tagIndex) {
+    return run(() -> {
+      PhotonPipelineResult result = vision.getLatestResult();
+      if (result.hasTargets()) {
+        Rotation2d yawToTag3d = PhotonUtils.getYawToPose(getPose(), Vision.kTagLayout.getTags().get(tagIndex).pose.toPose2d());
+        drive(getTargetSpeeds(xInput * swerveDrive.getMaximumVelocity(),
+                yInput,
+                yawToTag3d));
+      }
+    });
+  }
  
   /**
    * Get the path follower with events.
@@ -321,23 +322,23 @@ public Command sysIdAngleMotorCommand() {
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
 
-//   public void updateEstimatedPose(VisionSubsystem vision) {
-//     // Correct pose estimate with vision measurements
-//     var visionEst = vision.getEstimatedGlobalPose();
-//     visionEst.ifPresent(
-//             est -> {
-//                 var estPose = est.estimatedPose.toPose2d();
-//                 // Change our trust in the measurement based on the tags we can see
-//                 var estStdDevs = vision.getEstimationStdDevs(estPose);
+  public void updateEstimatedPose(VisionSubsystem vision) {
+    // Correct pose estimate with vision measurements
+    var visionEst = vision.getEstimatedGlobalPose();
+    visionEst.ifPresent(
+            est -> {
+                var estPose = est.estimatedPose.toPose2d();
+                // Change our trust in the measurement based on the tags we can see
+                var estStdDevs = vision.getEstimationStdDevs(estPose);
 
-//                 swerveDrive.addVisionMeasurement(
-//                         est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                swerveDrive.addVisionMeasurement(
+                        est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
 
-//                 double[] estimatedPose =  { est.estimatedPose.toPose2d().getX(), est.estimatedPose.toPose2d().getY() };
-//                 // Send the estimated position of the bot 
-//                 SmartDashboard.putNumberArray("Estimated Real Robot", estimatedPose);
-//             });
-// }
+                double[] estimatedPose =  { est.estimatedPose.toPose2d().getX(), est.estimatedPose.toPose2d().getY() };
+                // Send the estimated position of the bot 
+                SmartDashboard.putNumberArray("Estimated Real Robot", estimatedPose);
+            });
+}
 
   /**
    * Drive the robot given a chassis field oriented velocity.
@@ -409,6 +410,12 @@ public Command sysIdAngleMotorCommand() {
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds)
   {
     swerveDrive.setChassisSpeeds(chassisSpeeds);
+  }
+  public double getxpov(){
+    return getPose().getX();
+  }
+  public double getypov(){
+    return getPose().getY();
   }
 
   /**

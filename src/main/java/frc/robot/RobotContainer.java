@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
+import frc.robot.subsystems.Swerve.shooting_moving;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -55,6 +56,7 @@ public class RobotContainer {
   public final shooterSubsystem m_shooter = new shooterSubsystem();
   public final piviotSubsystem m_piviot = new piviotSubsystem();
   public final climberSubsystem m_climber = new climberSubsystem();
+  public final shooting_moving m_shooteMoving = new shooting_moving();
   // private final proximitysubsystem m_proximity = new proximitysubsystem();
 
   // private final ShooterSubsystem m_shooter = new ShooterSubsystem();
@@ -115,12 +117,14 @@ public class RobotContainer {
     // Manual controls
     // new Trigger(() -> Math.abs(Constants.operatorController.getRawAxis(1)) > 0.1)
     // .whileTrue(m_elevator.runManual(Constants.operatorController::getLeftY));
-    Constants.operatorController.x().whileTrue(m_intake.uptakeshoot());
-    Constants.operatorController.x().whileFalse(m_intake.disableUptake());
-    Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1))
+    Constants.operatorController.b().whileTrue(m_intake.uptakeshoot());
+    Constants.operatorController.b
+    ().whileFalse(m_intake.disableUptake());
+    Constants.operatorController.a().or(Constants.driverController.rightTrigger(.1))
         .whileTrue(m_intake.startIntaking());
-    Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1))
+    Constants.operatorController.a().or(Constants.driverController.rightTrigger(.1))
         .whileFalse(m_intake.stopIntaking());
+        
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_uptake.stopUptaking());
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileTrue(m_uptake.startUptaking());
 
@@ -147,8 +151,8 @@ public class RobotContainer {
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).or(m_proximity.piecein.whileFalse(m_intake.stopIntaking().andThen((m_uptake.stopUptaking()))));
 
     Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
-    Constants.operatorController.a().whileTrue(m_shooter.startAmpCommand());
-    Constants.operatorController.y().or(Constants.operatorController.a()).whileFalse(m_shooter.stopShooterCommand());
+    Constants.operatorController.x().whileTrue(m_shooter.startAmpCommand());
+    Constants.operatorController.y().or(Constants.operatorController.x()).whileFalse(m_shooter.stopShooterCommand());
 
     // Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
     // Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
@@ -195,8 +199,8 @@ public class RobotContainer {
     }
 
     Command driveinfinityturn = m_drivebase.driveCommand(
-        () -> MathUtil.applyDeadband( .6 * Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband( .6 * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband( a*.6 * Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband( a*.6 * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> MathUtil.applyDeadband(-.8 * Constants.driverController.getRightX(), .3));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(

@@ -7,15 +7,17 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-    
+    boolean pieceInBoolean;
     private final CANSparkMax centerMotor;
     private final UptakeSubsystem m_uptake = new UptakeSubsystem();
     private final proximitysubsystem m_proximity = new proximitysubsystem();
@@ -28,7 +30,10 @@ public class IntakeSubsystem extends SubsystemBase {
     boolean time;
     public boolean auto;
     public boolean uptakeshoot=false;
+     double light=0;
    public boolean intake;
+   Spark spark = new Spark(0);
+    AnalogInput piece = new AnalogInput(1);
 
 
 
@@ -46,6 +51,7 @@ public class IntakeSubsystem extends SubsystemBase {
         wait.reset();
         wait.start();
         intake=false;
+        
     }
 
 
@@ -65,7 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
     public Command uptakeshoot(){
         return run(()->{
-            this.m_uptake.uptake();
+            this.m_uptake.uptakeshoot();
            this. intake();
             uptakeshoot=true;
         });
@@ -154,6 +160,27 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic()
     {
+        if (piece.getValue()<100) {
+            // We are going up and top limit is tripped so stop
+            pieceInBoolean = true;
+             light =Timer.getFPGATimestamp();
+          } 
+          else {
+            // We are going up but top limit is not tripped so go at commanded speed
+            if (light+2<(Timer.getFPGATimestamp())){
+                pieceInBoolean = false;
+            }
+            
+          }
+        if (m_proximity.pieceInBoolean==true){
+            spark.set(.35);
+        }
+        else if (pieceInBoolean==true){
+          spark.set(.35);  
+        }
+        else{
+            spark.set(.75);
+        }
         if (auto==true){
        
             if (uptakeshoot==true){

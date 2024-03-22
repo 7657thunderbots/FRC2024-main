@@ -18,11 +18,11 @@ import frc.robot.Constants;
 
 
 public class piviotSubsystem extends SubsystemBase {
-    private final CANSparkMax piviot;
-    private AbsoluteEncoder piviotencoder;
+    public final CANSparkMax piviot;
+    public AbsoluteEncoder piviotencoder;
     private static final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
     private static final int kCPR = 3600;
-    private double piviotsetpoint;
+    public double piviotsetpoint;
     private boolean manualmove;
     private boolean setpoints;
     int timer;
@@ -101,7 +101,7 @@ public class piviotSubsystem extends SubsystemBase {
     double EerrorRate = (Eerror - ElastError) / dt;
 
     double houtput = hkP * Eerror + hkI * EerrorSum + hkD * EerrorRate;
-    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<2){
+    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<1){
         houtput=0;
     }
     if (piviotencoder.getPosition()<7 && houtput<0){

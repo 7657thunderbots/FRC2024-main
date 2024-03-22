@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class proximitysubsystem extends SubsystemBase{
 
   public Trigger piecein;
-  public Boolean pieceInBoolean=false;
+  public static Boolean pieceInBoolean=false;
   AnalogInput toplimitSwitch = new AnalogInput(0);
 
 
@@ -44,7 +44,7 @@ public class proximitysubsystem extends SubsystemBase{
      * Range returned from the distance sensor is valid if isRangeValid()
      * returns true.
      */
-
+      
      //System.out.println("DISTANCE SENSOR: "+pot.get())
 
 

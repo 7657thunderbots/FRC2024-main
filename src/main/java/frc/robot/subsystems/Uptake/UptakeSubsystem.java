@@ -20,6 +20,9 @@ public class UptakeSubsystem extends SubsystemBase {
     public void uptake(){
         uptake.set(-.4);
     }
+    public void uptakeshoot(){
+        uptake.set(-1);
+    }
 
     public void stop() {
         uptake.set(0);
@@ -36,7 +39,14 @@ public class UptakeSubsystem extends SubsystemBase {
            this.uptake();
         });
     }
+
+    public Command startshoot(){
+        return runOnce(() -> {
+           this.uptakeshoot();
+        });
+    }
    
+
 
     @Override
     public void periodic()
