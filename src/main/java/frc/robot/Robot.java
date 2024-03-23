@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    // m_robotContainer.m_drivebase.updateEstimatedPose(m_robotContainer.m_vision);
+    m_robotContainer.m_drivebase.updateEstimatedPose(m_robotContainer.m_vision);
     SmartDashboard.putNumber("A", m_robotContainer.a);
     if (driverController.getBackButton()) {
       m_robotContainer.a = 1;
@@ -129,6 +129,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_shooter.sauto = true;
     m_robotContainer.m_intake.auto = true;
     m_robotContainer.setMotorBrake(true);
+    m_robotContainer.m_piviot.piviotsetpoint=40.5;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -140,7 +141,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+    
   }
 
   @Override
@@ -217,7 +218,7 @@ public class Robot extends TimedRobot {
   
   if (driverController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==false){
     m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_shooteMoving.gotoangle;
-
+    //m_robotContainer.m_shooter.shooterspeed=m_robotContainer.m_shooteMoving.shootervoltagerequired;
   }
   if (operatorController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==true){
     m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_piviot.piviotencoder.getPosition();
@@ -252,12 +253,12 @@ public class Robot extends TimedRobot {
   }
 
   /** This function is called periodically whilst in simulation. */
-  // @Override
-  // public void simulationPeriodic() {
-  //   // Update drivetrain simulation
-  //   m_robotContainer.driveSimulationPeriodic();
+  @Override
+  public void simulationPeriodic() {
+    // Update drivetrain simulation
+    m_robotContainer.driveSimulationPeriodic();
 
-  //   Update camera simulation
-  //   m_robotContainer.updateVisionSimulationPeriod();
-  // }
+    //Update camera simulation
+   // m_robotContainer.updateVisionSimulationPeriod();
+  }
 }

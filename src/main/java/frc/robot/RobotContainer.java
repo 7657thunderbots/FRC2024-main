@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.subsystems.shooter.shooterSubsystem;
 import frc.robot.subsystems.Uptake.UptakeSubsystem;
-// import frc.robot.subsystems.Vision.VisionSubsystem;
+import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
@@ -66,12 +66,12 @@ public class RobotContainer {
   double a =1;
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
-  // public final VisionSubsystem m_vision = new VisionSubsystem();
+  public final VisionSubsystem m_vision = new VisionSubsystem();
 
   private final SendableChooser<Command> autoChooser;
 
-  // private Pose2d curentSpeakerPose;
-  // private int currentSpeakerTagIndex;
+  private Pose2d curentSpeakerPose;
+  private int currentSpeakerTagIndex;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,14 +79,14 @@ public class RobotContainer {
   public RobotContainer() {
     configurePathPlanner();
     autoChooser = AutoBuilder.buildAutoChooser("Simple Auto");
-    // Optional<Alliance> ally = DriverStation.getAlliance();
-    // if (ally.isPresent() && ally.get() != Alliance.Blue) {
-    // curentSpeakerPose = Constants.BLUE_SPEAKER;
-    // currentSpeakerTagIndex = 4;
-    // } else {
-    // curentSpeakerPose = Constants.RED_SPEAKER;
-    // currentSpeakerTagIndex = 3;
-    // }
+    Optional<Alliance> ally = DriverStation.getAlliance();
+    if (ally.isPresent() && ally.get() != Alliance.Blue) {
+    curentSpeakerPose = Constants.BLUE_SPEAKER;
+    currentSpeakerTagIndex = 4;
+    } else {
+    curentSpeakerPose = Constants.RED_SPEAKER;
+    currentSpeakerTagIndex = 3;
+    }
     Shuffleboard.getTab("Pre-Match").add("Auto Chooser", autoChooser);
     configureBindings(); // Configure the trigger bindings
   }
@@ -133,6 +133,7 @@ public class RobotContainer {
     Constants.operatorController.povUp().onTrue(m_piviot.piviotAmp());
     Constants.operatorController.povRight().onTrue(m_piviot.piviotspeakerclose());
     Constants.operatorController.povDown().onTrue(m_piviot.understage());
+    Constants.operatorController.povLeft().onTrue(m_shooter.startaimCommand());
     // Constants.operatorController.rightBumper().onTrue(m_climber.up1Command());
     // Constants.operatorController.rightTrigger().onTrue(m_climber.down1Command());
     // Constants.operatorController.rightBumper().or
@@ -152,12 +153,13 @@ public class RobotContainer {
 
     Constants.operatorController.y().whileTrue(m_shooter.startSpeakerCommand());
     Constants.operatorController.x().whileTrue(m_shooter.startAmpCommand());
-    Constants.operatorController.y().or(Constants.operatorController.x()).whileFalse(m_shooter.stopShooterCommand());
+    Constants.operatorController.y().or(Constants.operatorController.x()).or(Constants.operatorController.povLeft()).whileFalse(m_shooter.stopShooterCommand());
+    //Constants.driverController.leftTrigger().onTrue(m_shooter.shootmove());
 
-    // Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
-    // Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
-    // currentSpeakerTagIndex));
-    // Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
+    Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
+    Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
+    currentSpeakerTagIndex));
+    Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
 
   }
 
@@ -216,17 +218,17 @@ public class RobotContainer {
     m_drivebase.setMotorBrake(brake);
   }
 
-  // public void setRumbleDetection()
-  // {
-  // if (m_vision.getLatestResult().hasTargets()) {
-  // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0);
-  // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0);
-  // System.out.println(m_vision.getLatestResult().targets);
-  // } else {
-  // // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0);
-  // // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0);
-  // }
-  // }
+  public void setRumbleDetection()
+  {
+  if (m_vision.getLatestResult().hasTargets()) {
+  Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0);
+  Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0);
+  System.out.println(m_vision.getLatestResult().targets);
+  } else {
+  // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0);
+  // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0);
+  }
+  }
 
   // public void updateVisionSimulationPeriod() {
   // m_vision.simulationPeriodic(m_drivebase.getPose());

@@ -68,7 +68,7 @@ public class VisionSubsystem {
         return INSTANCE;
     }
 
-    private VisionSubsystem() {
+    public VisionSubsystem() {
         camera = new PhotonCamera(kCameraName);
 
         photonEstimator =

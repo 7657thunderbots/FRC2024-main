@@ -90,13 +90,11 @@ double xvelocity = Math.cos(angle)*9.23562083*2*.75;
 double distancecurrent = distance;
 double distancechange = distancecurrent-distance_last;
 double velocitychangex=(distancechange/timedone);
-double totoalvelocityx=velocitychangex + xvelocity;
+double totoalvelocityx= xvelocity;
 double anglefinal= Math.acos(totoalvelocityx/(9.23562083*2*.75));
 double angledeg= Math.toDegrees(anglefinal);
  gotoangle = 90-angledeg;
-if(totoalvelocityx>9.23562083*2){
-    stop=true;
-}
+
  if (gotoangle<5){
     stop=true;
  }

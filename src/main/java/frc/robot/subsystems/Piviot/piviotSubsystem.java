@@ -101,7 +101,7 @@ public class piviotSubsystem extends SubsystemBase {
     double EerrorRate = (Eerror - ElastError) / dt;
 
     double houtput = hkP * Eerror + hkI * EerrorSum + hkD * EerrorRate;
-    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<1){
+    if (Math.abs(piviotsetpoint-piviotencoder.getPosition())<.5){
         houtput=0;
     }
     if (piviotencoder.getPosition()<7 && houtput<0){

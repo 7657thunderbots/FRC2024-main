@@ -20,7 +20,11 @@ public class shooterSubsystem extends SubsystemBase {
    
   }
   public void shoot(){
-    leftLeader.setVoltage(9);
+    leftLeader.setVoltage(6);
+    leftFollower.setVoltage(-6);
+    }
+    public void autoaim(){
+        leftLeader.setVoltage(9);
     leftFollower.setVoltage(-9);
     }
     public void amp(){
@@ -58,6 +62,14 @@ public class shooterSubsystem extends SubsystemBase {
         if (!amping)  {
            this.speakering = true;
             this.shoot();
+         
+        }
+        });
+    }
+    public Command startaimCommand(){
+        return runOnce(() -> {
+        if (!amping)  {
+            this.autoaim();
          
         }
         });
