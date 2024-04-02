@@ -20,6 +20,7 @@ import frc.robot.subsystems.proximity.proximitysubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
+
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -33,6 +34,7 @@ import swervelib.parser.SwerveParser;
  * build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
   private XboxController operatorController;
 
@@ -101,6 +103,7 @@ public class Robot extends TimedRobot {
     } else if (driverController.getStartButton()) {
       m_robotContainer.a = -1;
     }
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -168,6 +171,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
   double startTime = 0;
+  if (driverController.getRightTriggerAxis()>.1){
+    m_robotContainer.b=1;
+
+  }
+  else{
+    m_robotContainer.b=.7;
+  }
     if (1 == 1){
       startTime = System.currentTimeMillis();
    
@@ -185,12 +195,9 @@ public class Robot extends TimedRobot {
 
     
     if (operatorController.getRightTriggerAxis()>.1){
-      if(climb2.getValue()>100){
-        m_robotContainer.m_climber.climber1.setVoltage(0);
-      }
-      else{
+      
       m_robotContainer.m_climber.climber1.setVoltage(13);
-      }
+      
     }
     else if (operatorController.getRightBumper()==true){
        m_robotContainer.m_climber.climber1.setVoltage(-13);
@@ -200,14 +207,13 @@ public class Robot extends TimedRobot {
     }
 
     if (operatorController.getLeftTriggerAxis()>.1){
-      if(climb1.getValue()>100){
-        m_robotContainer.m_climber.climber2.setVoltage(0);
-      }
-      else{
+      
+    
+      
       m_robotContainer.m_climber.climber2.setVoltage(-13);
       }
-    }
-    else if (operatorController.getLeftBumper()==true){
+    
+     else if (operatorController.getLeftBumper()==true){
        m_robotContainer.m_climber.climber2.setVoltage(13);
     }
     else{

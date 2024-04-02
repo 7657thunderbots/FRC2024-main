@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private final proximitysubsystem m_proximity = new proximitysubsystem();
     public final Timer wait = new Timer();
     boolean stop;
-    boolean init;
+    boolean init; 
     double starttime;
     double timedone;
     boolean started;

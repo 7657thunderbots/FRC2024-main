@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.Vision;
+// import frc.robot.subsystems.LEDSubsystems;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -64,6 +65,7 @@ public class RobotContainer {
   // private final LEDSubsystem m_LED = new LEDSubsystem
 
   double a =1;
+  public double b=.6;
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
   public final VisionSubsystem m_vision = new VisionSubsystem();
@@ -89,6 +91,7 @@ public class RobotContainer {
     }
     Shuffleboard.getTab("Pre-Match").add("Auto Chooser", autoChooser);
     configureBindings(); // Configure the trigger bindings
+    // private final LEDSubsystem led = new LEDSubsystem();
   }
 
   /**
@@ -120,9 +123,9 @@ public class RobotContainer {
     Constants.operatorController.b().whileTrue(m_intake.uptakeshoot());
     Constants.operatorController.b
     ().whileFalse(m_intake.disableUptake());
-    Constants.operatorController.a().or(Constants.driverController.rightTrigger(.1))
+    Constants.operatorController.a()
         .whileTrue(m_intake.startIntaking());
-    Constants.operatorController.a().or(Constants.driverController.rightTrigger(.1))
+    Constants.operatorController.a()
         .whileFalse(m_intake.stopIntaking());
         
     // Constants.operatorController.b().or(Constants.driverController.rightTrigger(.1)).whileFalse(m_uptake.stopUptaking());
@@ -201,8 +204,8 @@ public class RobotContainer {
     }
 
     Command driveinfinityturn = m_drivebase.driveCommand(
-        () -> MathUtil.applyDeadband( a*.6 * Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband( a*.6 * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband( a*b* Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband( a*b * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> MathUtil.applyDeadband(-.8 * Constants.driverController.getRightX(), .3));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(

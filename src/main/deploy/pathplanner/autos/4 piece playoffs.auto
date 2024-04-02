@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7471890191305137,
-      "y": 4.4219476557765
+      "x": 1.3715524460751891,
+      "y": 5.552966650487756
     },
-    "rotation": 119.11614626607894
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.56
+            "waitTime": 0.5
           }
         },
         {
@@ -62,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5010 match"
+            "pathName": "get piece 2 (center)"
           }
         },
         {
@@ -74,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5010 match return"
+            "pathName": "return piece 2 (center)"
           }
         },
         {
@@ -92,7 +92,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -105,6 +105,36 @@
           "type": "named",
           "data": {
             "name": "stop_Spin_up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "45 match"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "45 return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New New New New New New Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "New New New New New New New New Path"
           }
         }
       ]
