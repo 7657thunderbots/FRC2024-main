@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import frc.robot.subsystems.Vision.VisionSubsystem;
 //import frc.robot.subsystems.LED.LEDSubsystem;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.proximity.proximitysubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
-
+import edu.wpi.first.wpilibj.Relay;
 import java.io.File;
 import java.io.IOException;
 import swervelib.parser.SwerveParser;
@@ -47,7 +48,18 @@ public class Robot extends TimedRobot {
 
   private Timer disabledTimer;
   AnalogInput climb1 = new AnalogInput(3);
+  private final Relay m_relay = new Relay(0);
+  private static final int kRelayForwardButton = 1;
+  private static final int kRelayReverseButton = 2;
+ DigitalOutput light = new DigitalOutput(9);
   AnalogInput climb2 = new AnalogInput(2);
+  public double hkP = 0.05;
+    private final double hkI = 0.;
+   private final double hkD = 0.00;
+    private final double hiLimit = 0;
+    private double EerrorSum = 0;
+   private double ElastError=0;
+   boolean aim_rotate=false;
   public Robot() {
     instance = this;
   }
@@ -63,12 +75,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    
     operatorController = new XboxController(1);
     driverController = new XboxController(0);
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    
 
     // Create a timer to disable motor brake a few seconds after disable. This will
     // let the robot stop
@@ -88,6 +102,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    //if (m_robotContainer.m_intake.m_proximity.pieceInBoolean==true) {
+      light.set(true);
+    // } else if (forward) {
+    //   m_relay.set(Relay.Value.kForward);
+    // } else if (reverse) {
+    //   m_relay.set(Relay.Value.kReverse);
+    //} 
+    //else {
+     // m_relay.set(Relay.Value.kOff);
+   // }
+  
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -170,7 +195,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if(operatorController.getPOV()==-1){
+      this.m_robotContainer.m_piviot.piviotsetpoint=94.0;
+    }
+    double rad_per_sec = m_robotContainer.m_shooteMoving.rotationalspeedinradian;
   double startTime = 0;
+ 
+ 
   if (driverController.getRightTriggerAxis()>.1){
     m_robotContainer.b=1;
 
@@ -178,48 +209,64 @@ public class Robot extends TimedRobot {
   else{
     m_robotContainer.b=.7;
   }
+  
+  if (driverController.getLeftTriggerAxis()>.1){
+    aim_rotate=true;
+  }
+  else{
+    aim_rotate=false;
+  }
+if(aim_rotate==true){
+    m_robotContainer.rotation=rad_per_sec;
+    m_robotContainer.deadband=.3;
+  }
+  else{
+   m_robotContainer. rotation= driverController.getRightX();
+    m_robotContainer.deadband=.3;
+  }
     if (1 == 1){
       startTime = System.currentTimeMillis();
    
-      // if (System.currentTimeMillis()- startTime < 1) {
+      // 
+      if (System.currentTimeMillis()- startTime < 1) {
       //   operatorController.setRumble(RumbleType.kLeftRumble, 1);
       //   operatorController.setRumble(RumbleType.kRightRumble, 1);
       // }else {
       //   operatorController.setRumble(RumbleType.kLeftRumble, 0);
       //   operatorController.setRumble(RumbleType.kRightRumble, 0);
-      // }
+       }
+    
     }
-
-
-
 
     
-    if (operatorController.getRightTriggerAxis()>.1){
-      
-      m_robotContainer.m_climber.climber1.setVoltage(13);
-      
-    }
-    else if (operatorController.getRightBumper()==true){
-       m_robotContainer.m_climber.climber1.setVoltage(-13);
-    }
-    else{
-       m_robotContainer.m_climber.climber1.setVoltage(0);
-    }
 
-    if (operatorController.getLeftTriggerAxis()>.1){
+    
+  //   if (operatorController.getRightTriggerAxis()>.1 && climb2.getValue()>100){
+      
+  //     m_robotContainer.m_climber.climber1.setVoltage(13);
+      
+  //   }
+  //   else if (operatorController.getRightBumper()==true){
+  //      m_robotContainer.m_climber.climber1.setVoltage(-13);
+  //   }
+  //   else{
+  //      m_robotContainer.m_climber.climber1.setVoltage(0);
+  //   }
+
+  //   if (operatorController.getLeftTriggerAxis()>.1 && climb1.getValue()>100){
       
     
       
-      m_robotContainer.m_climber.climber2.setVoltage(-13);
-      }
+  //     m_robotContainer.m_climber.climber2.setVoltage(-13);
+  //     }
     
-     else if (operatorController.getLeftBumper()==true){
-       m_robotContainer.m_climber.climber2.setVoltage(13);
-    }
-    else{
+  //    else if (operatorController.getLeftBumper()==true){
+  //      m_robotContainer.m_climber.climber2.setVoltage(13);
+  //   }
+  //   else{
       
-       m_robotContainer.m_climber.climber2.setVoltage(0);
-    }
+  //      m_robotContainer.m_climber.climber2.setVoltage(0);
+  //   }
 
   
   if (driverController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==false){

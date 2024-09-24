@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     boolean pieceInBoolean;
     private final CANSparkMax centerMotor;
     private final UptakeSubsystem m_uptake = new UptakeSubsystem();
-    private final proximitysubsystem m_proximity = new proximitysubsystem();
+    public final proximitysubsystem m_proximity = new proximitysubsystem();
     public final Timer wait = new Timer();
     boolean stop;
     boolean init; 

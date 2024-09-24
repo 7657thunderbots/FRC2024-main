@@ -16,11 +16,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class shooting_moving extends SubsystemBase {
     public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
+   public double rotationalspeedinradian;
     double x_distsncetosp;
     double y_distsncetosp;
     double lasttimestamp;
+    double angle_to_speaker;
     double distance_last;
+    
     public boolean stop;
+    double radians_needed;
     Pose2d Speaker;
     public double gotoangle;
     public shooting_moving(){ 
@@ -83,7 +87,7 @@ double xabs =Math.abs(xsub);
 double xsquared = xabs * xabs;
 double distance_squared = xsquared+ ysquared;
 double distance = Math.sqrt(distance_squared);
-double hieght=1.55;
+double hieght=1.9; //height of speaker ***IMPORTANT ONLY CHANGE THIS THINGGY1.9
 double hypotofshooter = Math.sqrt(((hieght*hieght)+(distance*distance)));
 double angle= Math.atan(hieght/distance);
 double xvelocity = Math.cos(angle)*9.23562083*2*.75;
@@ -99,8 +103,32 @@ double x= (9.23562083*2*.75*9.23562083*2*.75)-(yaftergravity*yaftergravity);
 double xsq= Math.sqrt(x);
 double anglefinal= Math.acos(totoalvelocityx/(9.23562083*2*.75));
 //double anglefinal = Math.acos((xsq/(9.23562083*2*.75)));
-double angledeg= Math.toDegrees(anglefinal);
- gotoangle = 90-angledeg;
+double angledeg= anglefinal;
+gotoangle = 90-angledeg;
+double angle_to_0 = 90-Math.toDegrees(Math.acos(ysub/distance));
+ angle_to_speaker = angle_to_0;
+ if (y_distsncetosp<5.552967){
+ radians_needed = 360-(m_drivebase.getangle()- angle_to_speaker);
+ rotationalspeedinradian =radians_needed*.0075;
+ }
+ else{
+  radians_needed = (m_drivebase.getangle()- angle_to_speaker);
+  rotationalspeedinradian =radians_needed*.015;  
+ }
+double math_sign = Math.abs(radians_needed)+radians_needed;
+if(Math.abs(radians_needed)<5){
+    rotationalspeedinradian=0;   
+}
+// else if (math_sign==0){
+
+//     rotationalspeedinradian=-.7;
+// }
+else{
+    //rotationalspeedinradian =radians_needed*.015;
+    if(Math.abs(rotationalspeedinradian)<.006){
+        rotationalspeedinradian=.006*math_sign;
+    }
+}
 
  if (gotoangle<5){
     stop=true;
@@ -114,6 +142,8 @@ double angledeg= Math.toDegrees(anglefinal);
 
         SmartDashboard.putNumber("distance from speaker", distance);
         SmartDashboard.putNumber("anglegoto",gotoangle);
+        SmartDashboard.putNumber("angle to 0",angle_to_speaker);
+        SmartDashboard.putNumber("x_distsncetosp", y_distsncetosp);
     distance_last=distancecurrent;
     lasttimestamp = current_time;
         }

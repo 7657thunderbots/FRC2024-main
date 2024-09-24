@@ -10,7 +10,6 @@ import frc.robot.subsystems.Vision.VisionSubsystem;
 import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Piviot.piviotSubsystem;
 import frc.robot.subsystems.proximity.proximitysubsystem;
-import frc.robot.subsystems.Climber.climberSubsystem;
 
 import java.io.Console;
 import java.util.Optional;
@@ -37,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.Vision;
+import frc.robot.Constants;
 // import frc.robot.subsystems.LEDSubsystems;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -56,7 +56,7 @@ public class RobotContainer {
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   public final shooterSubsystem m_shooter = new shooterSubsystem();
   public final piviotSubsystem m_piviot = new piviotSubsystem();
-  public final climberSubsystem m_climber = new climberSubsystem();
+  // public final climberSubsystem m_climber = new climberSubsystem();
   public final shooting_moving m_shooteMoving = new shooting_moving();
   // private final proximitysubsystem m_proximity = new proximitysubsystem();
 
@@ -66,6 +66,11 @@ public class RobotContainer {
 
   double a =1;
   public double b=.6;
+  //controls the auto aim rotate function
+  public boolean aim_rotate = false;
+  public double rad_per_sec = 0;
+  double rotation;
+  double deadband;
 
   public final SwerveSubsystem m_drivebase = SwerveSubsystem.getInstance();
   public final VisionSubsystem m_vision = new VisionSubsystem();
@@ -135,7 +140,7 @@ public class RobotContainer {
     // Constants.operatorController.rightTrigger(0.1).onTrue(m_piviot.piviotAmp());
     Constants.operatorController.povUp().onTrue(m_piviot.piviotAmp());
     Constants.operatorController.povRight().onTrue(m_piviot.piviotspeakerclose());
-    Constants.operatorController.povDown().onTrue(m_piviot.understage());
+   // Constants.operatorController.povRight().and(Constants.operatorController.povLeft()).and(Constants.operatorController.povUp()).onFalse(m_piviot.understage());
     Constants.operatorController.povLeft().onTrue(m_shooter.startaimCommand());
     // Constants.operatorController.rightBumper().onTrue(m_climber.up1Command());
     // Constants.operatorController.rightTrigger().onTrue(m_climber.down1Command());
@@ -159,11 +164,10 @@ public class RobotContainer {
     Constants.operatorController.y().or(Constants.operatorController.x()).or(Constants.operatorController.povLeft()).whileFalse(m_shooter.stopShooterCommand());
     //Constants.driverController.leftTrigger().onTrue(m_shooter.shootmove());
 
-    Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
-    Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
-    currentSpeakerTagIndex));
+    //Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
+   //Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
+    //currentSpeakerTagIndex));
     Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
-
   }
 
   public void configurePathPlanner() {
@@ -202,36 +206,41 @@ public class RobotContainer {
       a = -1;
 
     }
+   
 
     Command driveinfinityturn = m_drivebase.driveCommand(
-        () -> MathUtil.applyDeadband( a*b* Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband( a*b * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> MathUtil.applyDeadband(-.8 * Constants.driverController.getRightX(), .3));
+        () -> MathUtil.applyDeadband( a*1* Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband( a*1 * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband(-1* rotation, deadband));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(
         () -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> -MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
         () -> MathUtil.applyDeadband(Constants.driverController.getRightX(), .3));
+    Command driveaim = m_drivebase.driveCommand(() -> MathUtil.applyDeadband(Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    () -> -MathUtil.applyDeadband(Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    () -> MathUtil.applyDeadband(rotation, deadband));
     m_drivebase.setDefaultCommand(
         RobotBase.isSimulation() ? driveinfinityturn : driveinfinityturn);
 
   }
 
+
   public void setMotorBrake(boolean brake) {
     m_drivebase.setMotorBrake(brake);
   }
 
-  public void setRumbleDetection()
-  {
-  if (m_vision.getLatestResult().hasTargets()) {
-  Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0);
-  Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0);
-  System.out.println(m_vision.getLatestResult().targets);
-  } else {
-  // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0);
-  // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0);
-  }
-  }
+  // public void setRumbleDetection()
+  // {
+  // if (m_vision.getLatestResult().hasTargets()) {
+  // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 1.0);
+  // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 1.0);
+  // System.out.println(m_vision.getLatestResult().targets);
+  // } else {
+  // // Constants.driverController.getHID().setRumble(RumbleType.kRightRumble, 0);
+  // // Constants.driverController.getHID().setRumble(RumbleType.kLeftRumble, 0);
+  // }
+  // }
 
   // public void updateVisionSimulationPeriod() {
   // m_vision.simulationPeriodic(m_drivebase.getPose());

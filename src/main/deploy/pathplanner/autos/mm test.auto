@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3561992470519597,
-      "y": 5.5580843834955
+      "x": 0.6857762230375946,
+      "y": 4.396358990737784
     },
-    "rotation": 180.0
+    "rotation": 115.25316339457395
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.56
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
@@ -56,7 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "get piece 2 (center)"
+            "pathName": "mm test"
           }
         },
         {
@@ -68,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 peice center"
+            "pathName": "NF shoot 1 piece off far"
           }
         },
         {
@@ -86,7 +92,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
@@ -99,48 +105,6 @@
           "type": "named",
           "data": {
             "name": "stop_Spin_up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "grab far piece 1 (Center)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_uptake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_Spin_up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Grab piece 1 "
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopshoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "45 match"
           }
         }
       ]

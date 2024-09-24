@@ -26,7 +26,7 @@ public class piviotSubsystem extends SubsystemBase {
     private boolean manualmove;
     private boolean setpoints;
     int timer;
-    public double hkP = 0.05;
+    public double hkP = 0.038;
     private final double hkI = 0.;
    private final double hkD = 0.00;
     private final double hiLimit = 0;
@@ -63,7 +63,7 @@ public class piviotSubsystem extends SubsystemBase {
         });
     }
      
-    public Command piviotspeakerclose(){
+    public Command piviotspeakerclose(){  //speaker
         return runOnce(() -> {
            this.piviotsetpoint = 40.5;
         });
@@ -74,7 +74,7 @@ public class piviotSubsystem extends SubsystemBase {
     //     });
     // }
 
-     public Command understage(){
+     public Command understage(){ //zero
         return runOnce(() -> {
            this.piviotsetpoint = 94.0;
         });
@@ -107,10 +107,10 @@ public class piviotSubsystem extends SubsystemBase {
     if (piviotencoder.getPosition()<7 && houtput<0){
          houtput=0;
      }
-    else if(piviotencoder.getPosition()>1000 && houtput>0){
+    else if(piviotencoder.getPosition()>93 && houtput>0){
         houtput=0;
      }
-    piviot.set(-houtput);
+    piviot.set((-houtput)-.01);
 
     // update last- variables
      lastTimestamp = Timer.getFPGATimestamp();

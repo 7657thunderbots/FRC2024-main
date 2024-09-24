@@ -4,23 +4,28 @@
 
 package frc.robot.subsystems.Swerve;
 
+import java.io.File;
+import java.util.function.DoubleSupplier;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -32,14 +37,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.Vision;
 import frc.robot.subsystems.Vision.VisionSubsystem;
-import java.io.File;
-import java.util.function.DoubleSupplier;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
+import swervelib.imu.SwerveIMU;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
@@ -53,14 +54,14 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Swerve drive object.
    */
-  private final SwerveDrive swerveDrive;
+  public final SwerveDrive swerveDrive;
   private static SwerveSubsystem INSTANCE = null;
 
   /**
-   * Maximum speed of the robot in meters per second, used to limit acceleration.
+   * Maximum speed of the robot in meters per second, used to limit acceleration. maybe feet per second.
    */
   public        double      maximumSpeed = Units.feetToMeters(14);
-
+ 
   public static SwerveSubsystem getInstance() {
     if (INSTANCE == null)
     {
@@ -72,6 +73,7 @@ public class SwerveSubsystem extends SubsystemBase
   private SlewRateLimiter filter = new SlewRateLimiter(0.5);
 
   // SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeedMPS);
+
   
 
   /**
@@ -111,7 +113,8 @@ public class SwerveSubsystem extends SubsystemBase
     setupPathPlanner();
 //    swerveDrive.updateCacheValidityPeriods(20, 20, 20);
   }
-
+public double angle;
+public double lastangle;
   /**
    * Construct the swerve drive.
    *
@@ -122,10 +125,30 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive = new SwerveDrive(driveCfg, controllerCfg, maximumSpeed);
   }
+  /**
+   * code for getting current angle of robot for auto rotating function
+   * @return radian value of robot for aim bot
+   */
+  public double angles (){
+    Rotation2d angle = swerveDrive.getYaw();
+return angle.getDegrees();
+  }
+public double getangle(){
+  if (angles()<0){
+    angle=360-angles();
+  }
+  else {
+    angle = angles();
+  }
+
+  return angle;
+}
+
 
   /**
    * Setup AutoBuilder for PathPlanner.
    */
+  
   public void setupPathPlanner()
   {
     AutoBuilder.configureHolonomic(
@@ -414,6 +437,7 @@ public Command sysIdAngleMotorCommand() {
   public double getxpov(){
     return getPose().getX();
   }
+
   public double getypov(){
     return getPose().getY();
   }

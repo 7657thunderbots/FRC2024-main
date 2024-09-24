@@ -39,13 +39,12 @@ public final class Constants {
   public static final CommandXboxController operatorController =
           new CommandXboxController(DriveteamConstants.kOperatorControllerPort);
   
-  public static final double ROBOT_MASS = (100) * 0.453592; // 32lbs * kg per pound***Need to change
+  public static final double ROBOT_MASS = (120) * 0.453592; // 32lbs * kg per pound***Need to change
   // public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 
   public static final Pose2d BLUE_SPEAKER = new Pose2d(Units.Meters.of(3), Units.Meters.of(5.77), Rotation2d.fromDegrees(130.0));
   public static final Pose2d RED_SPEAKER = new Pose2d(Units.Meters.of(14), Units.Meters.of(5.77), Rotation2d.fromDegrees(330.0));
-
   public static final int BLUE_SPEAKER_TAG_INDEX = 3;
   public static final int RED_SPEAKER_TAG_INDEX = 8;
 

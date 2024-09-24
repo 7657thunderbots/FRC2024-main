@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3561992470519597,
-      "y": 5.5580843834955
+      "x": 1.3715524460751891,
+      "y": 5.552966650487756
     },
     "rotation": 180.0
   },
@@ -21,6 +21,12 @@
           "type": "wait",
           "data": {
             "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         },
         {
@@ -104,43 +110,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "grab far piece 1 (Center)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_uptake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop_Spin_up"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Grab piece 1 "
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopshoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "45 match"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "45 return"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]
