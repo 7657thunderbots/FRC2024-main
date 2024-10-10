@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.Swerve.shooting_moving;
+import frc.robot.subsystems.Climber.climberSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -56,7 +57,7 @@ public class RobotContainer {
   public final IntakeSubsystem m_intake = new IntakeSubsystem();
   public final shooterSubsystem m_shooter = new shooterSubsystem();
   public final piviotSubsystem m_piviot = new piviotSubsystem();
-  // public final climberSubsystem m_climber = new climberSubsystem();
+  public final climberSubsystem m_climber = new climberSubsystem();
   public final shooting_moving m_shooteMoving = new shooting_moving();
   // private final proximitysubsystem m_proximity = new proximitysubsystem();
 
@@ -141,7 +142,7 @@ public class RobotContainer {
     Constants.operatorController.povUp().onTrue(m_piviot.piviotAmp());
     Constants.operatorController.povRight().onTrue(m_piviot.piviotspeakerclose());
    // Constants.operatorController.povRight().and(Constants.operatorController.povLeft()).and(Constants.operatorController.povUp()).onFalse(m_piviot.understage());
-    Constants.operatorController.povLeft().onTrue(m_shooter.startaimCommand());
+    //Constants.operatorController.povLeft().onTrue(m_shooter.startaimCommand());
     // Constants.operatorController.rightBumper().onTrue(m_climber.up1Command());
     // Constants.operatorController.rightTrigger().onTrue(m_climber.down1Command());
     // Constants.operatorController.rightBumper().or
@@ -167,7 +168,7 @@ public class RobotContainer {
     //Constants.driverController.b().whileTrue(m_drivebase.aimAtTarget(m_vision,
    //Constants.driverController.getLeftX(), Constants.driverController.getLeftY(),
     //currentSpeakerTagIndex));
-    Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
+   // Constants.driverController.a().whileTrue(m_drivebase.driveToPose(curentSpeakerPose));
   }
 
   public void configurePathPlanner() {
@@ -209,8 +210,8 @@ public class RobotContainer {
    
 
     Command driveinfinityturn = m_drivebase.driveCommand(
-        () -> MathUtil.applyDeadband( a*1* Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband( a*1 * Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> MathUtil.applyDeadband( a*.5* Constants.driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband( a*.5* Constants.driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> MathUtil.applyDeadband(-1* rotation, deadband));
 
     Command driveinfinityturn_sim = m_drivebase.driveCommand(

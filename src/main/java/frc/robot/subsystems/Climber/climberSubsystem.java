@@ -1,15 +1,20 @@
 package frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 
 
 public class climberSubsystem extends SubsystemBase {
  
         public final CANSparkMax climber1;
         public final CANSparkMax climber2;
-
+        public RelativeEncoder climb1Encoder;
+        public RelativeEncoder climb2Encoder;
         public climberSubsystem(){
         climber1 = new CANSparkMax(23 , CANSparkLowLevel.MotorType.kBrushless);
         climber1.restoreFactoryDefaults();
@@ -17,8 +22,11 @@ public class climberSubsystem extends SubsystemBase {
          climber2 = new CANSparkMax(24 , CANSparkLowLevel.MotorType.kBrushless);
         climber2.restoreFactoryDefaults();
         climber2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    
+        climb1Encoder = climber1.getEncoder();
+        climb2Encoder = climber2.getEncoder();
+        
         }
+    
         public void up1(){
             climber1.setVoltage(8);
         }

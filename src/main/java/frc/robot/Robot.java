@@ -38,7 +38,6 @@ import swervelib.parser.SwerveParser;
 
 public class Robot extends TimedRobot {
   private XboxController operatorController;
-
   private static Robot instance;
   private Command m_autonomousCommand;
   private XboxController driverController;
@@ -59,7 +58,11 @@ public class Robot extends TimedRobot {
     private final double hiLimit = 0;
     private double EerrorSum = 0;
    private double ElastError=0;
+   boolean startclimb;
    boolean aim_rotate=false;
+   boolean down;
+   boolean startpull;
+   boolean up =true;
   public Robot() {
     instance = this;
   }
@@ -76,6 +79,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     
+    startclimb = false;
+    down=true;
+    startpull = false;
     operatorController = new XboxController(1);
     driverController = new XboxController(0);
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -210,20 +216,20 @@ public class Robot extends TimedRobot {
     m_robotContainer.b=.7;
   }
   
-  if (driverController.getLeftTriggerAxis()>.1){
-    aim_rotate=true;
-  }
-  else{
+  // if (driverController.getLeftTriggerAxis()>.1){
+  //   aim_rotate=true;
+  // }
+  //else{
     aim_rotate=false;
-  }
-if(aim_rotate==true){
-    m_robotContainer.rotation=rad_per_sec;
-    m_robotContainer.deadband=.3;
-  }
-  else{
+ // }
+// if(aim_rotate==true){
+//     m_robotContainer.rotation=rad_per_sec;
+//     m_robotContainer.deadband=.3;
+//   }
+ // else{
    m_robotContainer. rotation= driverController.getRightX();
     m_robotContainer.deadband=.3;
-  }
+ // }
     if (1 == 1){
       startTime = System.currentTimeMillis();
    
@@ -238,45 +244,104 @@ if(aim_rotate==true){
     
     }
 
-    
+    if (m_robotContainer.m_climber.climb1Encoder.getPosition()<0 && m_robotContainer.m_climber.climb2Encoder.getPosition()>0){
+        down=false;
+      }
+      else{
+        down=true;
+      }
 
     
-  //   if (operatorController.getRightTriggerAxis()>.1 && climb2.getValue()>100){
+    if (operatorController.getRightTriggerAxis()>.1){
       
-  //     m_robotContainer.m_climber.climber1.setVoltage(13);
+      startclimb=true;
       
-  //   }
-  //   else if (operatorController.getRightBumper()==true){
-  //      m_robotContainer.m_climber.climber1.setVoltage(-13);
-  //   }
-  //   else{
-  //      m_robotContainer.m_climber.climber1.setVoltage(0);
-  //   }
+      
+    }
+    else{
+      startclimb=false;
+    }
+    
 
-  //   if (operatorController.getLeftTriggerAxis()>.1 && climb1.getValue()>100){
+    if (operatorController.getLeftTriggerAxis()>.1 ){
+      startpull= true;
+      }
+      else{
+        startpull=false;
+      }
+if (startclimb ==true ){
+  if(m_robotContainer.m_climber.climb1Encoder.getPosition()>-560.79){
+ m_robotContainer.m_climber.climber1.setVoltage(-13);
+  }
+  else{
+     m_robotContainer.m_climber.climber1.setVoltage(0);
+
+  }
+  if (m_robotContainer.m_climber.climb2Encoder.getPosition()<510.79) {
+    m_robotContainer.m_climber.climber2.setVoltage(13);
+  }
+  else{
+m_robotContainer.m_climber.climber2.setVoltage(0);
+  }
+}
+else if (startpull==true){
+  if(m_robotContainer.m_climber.climb1Encoder.getPosition()<-10){
+     m_robotContainer.m_climber.climber1.setVoltage(13);
+  }
+  else{
+     m_robotContainer.m_climber.climber1.setVoltage(0);
+  }
+  if (m_robotContainer.m_climber.climb2Encoder.getPosition()>10) {
+    m_robotContainer.m_climber.climber2.setVoltage(-13);
+  }
+  else{
+    m_robotContainer.m_climber.climber2.setVoltage(0);
+  }
+}
+else{
+m_robotContainer.m_climber.climber2.setVoltage(0);
+ m_robotContainer.m_climber.climber1.setVoltage(0);
+
+}
+
+// if (operatorController.getRightTriggerAxis()>.1){
       
-    
-      
-  //     m_robotContainer.m_climber.climber2.setVoltage(-13);
-  //     }
-    
-  //    else if (operatorController.getLeftBumper()==true){
-  //      m_robotContainer.m_climber.climber2.setVoltage(13);
-  //   }
-  //   else{
-      
-  //      m_robotContainer.m_climber.climber2.setVoltage(0);
-  //   }
+//   m_robotContainer.m_climber.climber1.setVoltage(13);
+  
+// }
+// else if (operatorController.getRightBumper()==true){
+//    m_robotContainer.m_climber.climber1.setVoltage(-13);
+// }
+// else{
+//    m_robotContainer.m_climber.climber1.setVoltage(0);
+// }
+
+// if (operatorController.getLeftTriggerAxis()>.1){
+  
 
   
-  if (driverController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==false){
-    m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_shooteMoving.gotoangle;
-    //m_robotContainer.m_shooter.shooterspeed=m_robotContainer.m_shooteMoving.shootervoltagerequired;
-  }
-  if (operatorController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==true){
-    m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_piviot.piviotencoder.getPosition();
+//   m_robotContainer.m_climber.climber2.setVoltage(-13);
+//   }
 
-  }
+//  else if (operatorController.getLeftBumper()==true){
+//    m_robotContainer.m_climber.climber2.setVoltage(13);
+// }
+// else{
+  
+//    m_robotContainer.m_climber.climber2.setVoltage(0);
+// }
+SmartDashboard.putNumber("cliber1", m_robotContainer.m_climber.climb1Encoder.getPosition());
+SmartDashboard.putNumber("cliber2", m_robotContainer.m_climber.climb2Encoder.getPosition());
+  
+  
+  // if (driverController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==false){
+  //   m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_shooteMoving.gotoangle;
+  //   //m_robotContainer.m_shooter.shooterspeed=m_robotContainer.m_shooteMoving.shootervoltagerequired;
+  // }
+  // if (operatorController.getLeftTriggerAxis()>.1 && m_robotContainer.m_shooteMoving.stop==true){
+  //   m_robotContainer.m_piviot.piviotsetpoint=m_robotContainer.m_piviot.piviotencoder.getPosition();
+
+  // }
   
   
 
